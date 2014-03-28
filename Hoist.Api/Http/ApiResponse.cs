@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hoist.Api
+namespace Hoist.Api.Http
 {
     public class ApiResponse
     {
@@ -12,6 +12,6 @@ namespace Hoist.Api
         public string Description { get; set; }
         public bool WithWWWAuthenticate { get; set; }
         public string HoistSession { get; set; }
-        public IJsonObject Payload { get; set; }
+        public string Payload { get; set; }
     }
 }

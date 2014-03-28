@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,13 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiResponse.cs" />
+    <Compile Include="Http\ApiResponse.cs" />
     <Compile Include="Hoist.cs" />
     <Compile Include="Exceptions\BadApiKeyException.cs" />
     <Compile Include="eEndPoint.cs" />
     <Compile Include="Exceptions\UnexpectedResponseException.cs" />
-    <Compile Include="SimpleHoistObject.cs" />
-    <Compile Include="IHttpLayer.cs" />
+    <Compile Include="Model\HoistUser.cs" />
+    <Compile Include="Model\LoginPayload.cs" />
+    <Compile Include="Model\SimpleHoistObject.cs" />
+    <Compile Include="Http\IHttpLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

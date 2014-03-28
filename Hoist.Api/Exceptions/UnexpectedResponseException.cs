@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hoist.Api.Http;
 
 namespace Hoist.Api.Exceptions
 {
-    class UnexpectedResponseException : Exception
+    public class UnexpectedResponseException : Exception
     {
         public int Code { get; set; }
         public string Description { get; set; }

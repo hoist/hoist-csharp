@@ -31,6 +31,17 @@ namespace Hoist.Api.Test
         }
 
         [TestMethod]
+        public void ToJsonReturnsWhatsExpectedWithObject()
+        {
+            var serializer = new JavaScriptSerializer();
+            Object obj = new Person { PersonID = 123, Name = "ABC", Registered = false };
+            var serializedResult = serializer.Serialize(obj);
+            Assert.AreEqual("{\"PersonID\":123,\"Name\":\"ABC\",\"Registered\":false}", serializedResult);
+        }
+
+
+
+        [TestMethod]
         public void FromJsonReturnsWhatsExpected()
         {
             var serializer = new JavaScriptSerializer();
@@ -46,6 +57,16 @@ namespace Hoist.Api.Test
             var serializer = new JavaScriptSerializer();
             var serializedResult = serializer.Deserialize<Person>("{\"PersonID\":123,\"Name\":\"ABC\"}");
             
+            Assert.AreEqual(123, serializedResult.PersonID);
+            Assert.AreEqual("ABC", serializedResult.Name);
+        }
+
+        [TestMethod]
+        public void DifferentCaseProperties()
+        {
+            var serializer = new JavaScriptSerializer();
+            var serializedResult = serializer.Deserialize<Person>("{\"personid\":123,\"name\":\"ABC\"}");
+
             Assert.AreEqual(123, serializedResult.PersonID);
             Assert.AreEqual("ABC", serializedResult.Name);
         }

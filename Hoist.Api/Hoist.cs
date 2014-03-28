@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.Script.Serialization;
 using Hoist.Api.Exceptions;
+using Hoist.Api.Http;
+using Hoist.Api.Model;
 
 namespace Hoist.Api
 {
     public class Hoist
     {
         private string _apiKey;
+        private string _session;
+
         private IHttpLayer _httpLayer;
+        private JavaScriptSerializer _serialiser;
 
         private class EndPoints
         {
@@ -20,57 +26,43 @@ namespace Hoist.Api
             public const string Logout = Base + "logout";
         }
 
-        public Hoist(string apiKey) 
-        {
-            _apiKey = apiKey;
-
-        }
-
         public Hoist(string apiKey, IHttpLayer httpLayer)
         {
             _apiKey = apiKey;
             _httpLayer = httpLayer;
+            _serialiser = new JavaScriptSerializer();
         }
 
-        public IJsonObject Login(string email, string password)
+        public HoistUser Login(string email, string password)
         {
-            var response = _httpLayer.Post(EndPoints.Login, _apiKey, new LoginPayLoad(email, password));
-            if (response.Code == 200) {
-                return response.Payload;
+            var response = _httpLayer.Post(EndPoints.Login, _apiKey, null, _serialiser.Serialize(new LoginPayload(email, password)));
+            _session = response.HoistSession;
+            return ProcessHoistUser(response);
+        }
+
+        public HoistUser Status()
+        {
+            var response = _httpLayer.Get(EndPoints.Status, _apiKey, _session);
+            return ProcessHoistUser(response);
+        }
+
+        private HoistUser ProcessHoistUser(ApiResponse response)
+        {
+            if (response.Code == 200)
+            {
+                return _serialiser.Deserialize<HoistUser>(response.Payload);
             }
-            else if (response.Code == 401 && response.WithWWWAuthenticate) {
+            else if (response.Code == 401 && response.WithWWWAuthenticate)
+            {
                 throw new BadApiKeyException();
             }
-            else if (response.Code == 401) {
+            else if (response.Code == 401)
+            {
                 return null; //Failed to login
             }
-            else {
+            else
+            {
                 throw new UnexpectedResponseException(response);
-            }           
-        }
-
-        private class LoginPayLoad : IJsonObject 
-        {
-            private string _email = null;
-            private string _password = null;
-
-            public LoginPayLoad(string email, string password)
-            {
-                _email = email;
-                _password = password;
-            }
-
-            public string Get(string key)
-            {
-                switch (key)
-                {
-                    case "email":
-                        return _email;
-                    case "password":
-                        return _password;
-                    default:
-                        return null;
-                }
             }
         }
 
