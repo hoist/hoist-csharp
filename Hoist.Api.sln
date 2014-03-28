@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E5F847
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hoist.Api.Test", "Hoist.Api.Test\Hoist.Api.Test.csproj", "{4B050483-5C73-476E-95FE-20CA6D3AE188}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hoist.Console", "Hoist.Console\Hoist.Console.csproj", "{E73F8F23-B25C-4303-8496-2305F6C016BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{4B050483-5C73-476E-95FE-20CA6D3AE188}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B050483-5C73-476E-95FE-20CA6D3AE188}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B050483-5C73-476E-95FE-20CA6D3AE188}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E73F8F23-B25C-4303-8496-2305F6C016BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E73F8F23-B25C-4303-8496-2305F6C016BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E73F8F23-B25C-4303-8496-2305F6C016BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E73F8F23-B25C-4303-8496-2305F6C016BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

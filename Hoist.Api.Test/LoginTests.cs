@@ -61,7 +61,7 @@ namespace Hoist.Api.Test
             //Check the right URLs were called
             Assert.AreEqual("https://auth.hoi.io/login", httpLayer.Calls[0].Item1);
             Assert.AreEqual("MYAPIKEY", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"Email\":\"Username\",\"Password\":\"Password\"}", httpLayer.Calls[0].Item3);
+            Assert.AreEqual("{\"email\":\"Username\",\"password\":\"Password\"}", httpLayer.Calls[0].Item3);
             Assert.AreEqual(null, httpLayer.Calls[0].Item4);
                         
             usr = client.Status();

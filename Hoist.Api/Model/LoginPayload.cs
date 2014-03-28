@@ -8,13 +8,13 @@ namespace Hoist.Api.Model
 {
     class LoginPayload
     {
-         public string Email { get; set; }
-            public string Password { get; set; }
-            
-            public LoginPayload(string email, string password)
-            {
-                Email = email;
-                Password = password;
-            }
+        public string email { get; set; }
+        public string password { get; set; }
+
+        public LoginPayload(string email, string password)
+        {
+            this.email = email;
+            this.password = password;
+        }
     }
 }
