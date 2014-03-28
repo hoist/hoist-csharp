@@ -26,6 +26,8 @@ namespace Hoist.Api
             public const string Logout = Base + "logout";
         }
 
+        public Hoist(string apiKey) : this(apiKey, new HoistHttpLayer()) { } 
+
         public Hoist(string apiKey, IHttpLayer httpLayer)
         {
             _apiKey = apiKey;
