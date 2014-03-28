@@ -33,8 +33,8 @@ namespace Hoist.Api.Test
                 Payload = new SimpleHoistObject(
                     new Dictionary<string, string>() { { "role", "Member" }, { "id", "52b75440c69c80630a00000c" } })
             };
-            var auth = CreateHoist("MYAPIKEY");
-            var usr = auth.Login("Username", "Password");
+            var client = CreateHoist("MYAPIKEY");
+            var usr = client.Login("Username", "Password");
             Assert.IsNotNull(usr);
             Assert.IsTrue(httpLayer.Calls.Count > 0);
         }
@@ -45,10 +45,10 @@ namespace Hoist.Api.Test
             bool caughtException = false;
             httpLayer.Response = new ApiResponse { Code = 401, WithWWWAuthenticate = true };
 
-            var auth = CreateHoist("BADAPI");
+            var client = CreateHoist("BADAPI");
             try
             {
-                var usr = auth.Login("Username", "Password");
+                var usr = client.Login("Username", "Password");
             }
             catch (Exceptions.BadApiKeyException)
             {
@@ -62,8 +62,8 @@ namespace Hoist.Api.Test
         public void FailedLoginReturnsNull()
         {
             httpLayer.Response = new ApiResponse { Code = 401, WithWWWAuthenticate = false };
-            var auth = CreateHoist("MYAPIKEY");
-            var usr = auth.Login("Username", "Password1");
+            var client = CreateHoist("MYAPIKEY");
+            var usr = client.Login("Username", "Password1");
             Assert.IsTrue(httpLayer.Calls.Count > 0);
             Assert.IsNull(usr); 
         }
