@@ -17,11 +17,11 @@ namespace Hoist.Api.Http
         {
             if (sslPolicyErrors == SslPolicyErrors.None)
             {
-                Console.WriteLine("Certificate Passed");
+                //Console.WriteLine("Certificate Passed");
                 return true;
             }
 
-            Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+            //Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
 
             // Do not allow this client to communicate with unauthenticated servers. 
             return false;

@@ -61,6 +61,7 @@
     <Compile Include="MockHttpLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialisationTests.cs" />
+    <Compile Include="DataTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hoist.Api\Hoist.Api.csproj">

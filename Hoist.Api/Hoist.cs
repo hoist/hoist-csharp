@@ -15,7 +15,7 @@ namespace Hoist.Api
         private string _session;
 
         private IHttpLayer _httpLayer;
-        private JavaScriptSerializer _serialiser;
+        internal JavaScriptSerializer Serialiser { get; private set;}
 
         private class EndPoints
         {
@@ -32,12 +32,13 @@ namespace Hoist.Api
         {
             _apiKey = apiKey;
             _httpLayer = httpLayer;
-            _serialiser = new JavaScriptSerializer();
+            Serialiser = new JavaScriptSerializer();
+            Serialiser.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
         }
 
         public HoistUser Login(string email, string password)
         {
-            var response = _httpLayer.Post(EndPoints.Login, _apiKey, null, _serialiser.Serialize(new LoginPayload(email, password)));
+            var response = Post(EndPoints.Login, new LoginPayload(email, password)); 
             _session = response.HoistSession;
             return ProcessHoistUser(response);
         }
@@ -48,11 +49,26 @@ namespace Hoist.Api
             return ProcessHoistUser(response);
         }
 
+        public HoistCollection<HoistModel> GetCollection(string collectionName)
+        {
+            return GetCollection<HoistModel>(collectionName);
+        }
+
+        public HoistCollection<CollectionType> GetCollection<CollectionType>(string collectionName) where CollectionType : class
+        {
+            return new HoistCollection<CollectionType>(this, collectionName);
+        }
+
+        internal ApiResponse Post(string endPoint, object data)
+        {
+            return _httpLayer.Post(endPoint, _apiKey, _session, Serialiser.Serialize(data));
+        }
+
         private HoistUser ProcessHoistUser(ApiResponse response)
         {
             if (response.Code == 200)
             {
-                return _serialiser.Deserialize<HoistUser>(response.Payload);
+                return Serialiser.Deserialize<HoistUser>(response.Payload);
             }
             else if (response.Code == 401 && response.WithWWWAuthenticate)
             {
@@ -68,5 +84,7 @@ namespace Hoist.Api
             }
         }
 
+
+        
     }
 }

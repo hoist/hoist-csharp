@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
+using Hoist.Api.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Hoist.Api.Test
@@ -91,6 +92,39 @@ namespace Hoist.Api.Test
             Assert.AreEqual("DEF", serializedResult.Employees[1].Name);
 
         }
+
+        [TestMethod]
+        public void HoistModelCanSerialise()
+        {            
+            var serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
+            var serializedResult = serializer.Serialize( new HoistModel() );
+            Assert.AreEqual("{}", serializedResult);
+
+            serializedResult = serializer.Serialize(new HoistModel( new Dictionary<string,string>() {{"Name","Jack"},{"Key","Value"}} ));
+            Assert.AreEqual("{\"Name\":\"Jack\",\"Key\":\"Value\"}", serializedResult);
+
+            serializedResult = serializer.Serialize(new HoistModel(new Dictionary<string, string> { { "k1", "v1" } }));
+            Assert.AreEqual("{\"k1\":\"v1\"}", serializedResult);
+
+        }
+
+        [TestMethod]
+        public void HoistModelCanDeSerialise()
+        {
+            var serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
+            var serializedResult = serializer.Deserialize<HoistModel>("{}");
+            Assert.AreEqual(0 , serializedResult.Keys.Count);
+
+            serializedResult = serializer.Deserialize<HoistModel>("{\"Name\":\"Jack\",\"Key\":\"Value\"}");
+            Assert.AreEqual(2, serializedResult.Keys.Count);
+            Assert.AreEqual("Jack", serializedResult.Get("Name"));
+            Assert.AreEqual("Value", serializedResult.Get("Key"));
+
+        }
+
+
        
 
     }
