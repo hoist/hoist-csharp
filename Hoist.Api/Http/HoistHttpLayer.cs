@@ -109,7 +109,21 @@ namespace Hoist.Api.Http
             response.Close();
             return retval;
         }
+        
+        public ApiResponse Delete(string endpoint, string apiKey, string session)
+        {
+            var wr = WebRequest.CreateHttp(endpoint);
+            wr.ServerCertificateValidationCallback = ValidateServerCertificate;
+            wr.Headers.Add("Authorization", "Hoist " + apiKey);
+            if (session != null)
+            {
+                wr.Headers.Add("Cookie", session);
+            }
+            wr.Method = "DELETE";
+            wr.ContentType = "application/json";
 
-
+            var retval = GetResponse(wr);
+            return retval;
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace Hoist.Api.Http
     {
         ApiResponse Post(string endpoint, string apiKey, string session, string data);
         ApiResponse Get(string endpoint, string apiKey, string session);
+        ApiResponse Delete(string endpoint, string apiKey, string session);
     }
 
 }

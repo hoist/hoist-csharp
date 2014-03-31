@@ -10,13 +10,14 @@ namespace Hoist.Api.Test
     public class MockHttpLayer : IHttpLayer
     {
 
-        public List<Tuple<string, string, string, string>> Calls = new List<Tuple<string, string, string, string>>();
+        public List<Tuple<string, string, string, string,string>> Calls = new List<Tuple<string, string, string, string, string>>();
+
         public ApiResponse Response = null;
         public Exception ErrorToThrow = null;
 
         public ApiResponse Post(string endpoint, string apiKey, string session, string data)
         {
-            Calls.Add(new Tuple<string, string, string, string>(endpoint, apiKey, data, session));
+            Calls.Add(new Tuple<string, string, string, string, string>(endpoint, apiKey, data, session, "POST"));
             if (ErrorToThrow != null)
             {
                 throw ErrorToThrow;
@@ -26,7 +27,17 @@ namespace Hoist.Api.Test
 
         public ApiResponse Get(string endpoint, string apiKey, string session)
         {
-            Calls.Add(new Tuple<string, string, string, string>(endpoint, apiKey, null, session));
+            Calls.Add(new Tuple<string, string, string, string,string>(endpoint, apiKey, null, session, "GET"));
+            if (ErrorToThrow != null)
+            {
+                throw ErrorToThrow;
+            }
+            return Response;
+        }
+
+        public ApiResponse Delete(string endpoint, string apiKey, string session)
+        {
+            Calls.Add(new Tuple<string, string, string, string, string>(endpoint, apiKey, null, session, "DELETE"));
             if (ErrorToThrow != null)
             {
                 throw ErrorToThrow;

@@ -44,11 +44,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\DataConflictException.cs" />
+    <Compile Include="Exceptions\DataNotFoundException.cs" />
+    <Compile Include="Exceptions\MissingPropertiesException.cs" />
+    <Compile Include="Exceptions\TemplateNotFoundException.cs" />
     <Compile Include="Http\ApiResponse.cs" />
     <Compile Include="Hoist.cs" />
     <Compile Include="Exceptions\BadApiKeyException.cs" />
-    <Compile Include="eEndPoint.cs" />
     <Compile Include="Exceptions\UnexpectedResponseException.cs" />
+    <Compile Include="Http\EndPoints.cs" />
     <Compile Include="Http\HoistHttpLayer.cs" />
     <Compile Include="Model\HoistCollection.cs" />
     <Compile Include="Model\HoistModelJavaScriptConverter.cs" />
@@ -56,6 +59,7 @@
     <Compile Include="Model\LoginPayload.cs" />
     <Compile Include="Model\HoistModel.cs" />
     <Compile Include="Http\IHttpLayer.cs" />
+    <Compile Include="Model\ReflectionUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

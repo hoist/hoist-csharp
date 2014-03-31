@@ -4,13 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hoist.Api
+namespace Hoist.Api.Exceptions
 {
-    public enum eEndPointType
+    public class DataNotFoundException : Exception
     {
-        Auth,
-        Data, 
-        Notify, 
-        File
     }
 }

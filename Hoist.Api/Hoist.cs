@@ -6,6 +6,8 @@ using System.Web.Script.Serialization;
 using Hoist.Api.Exceptions;
 using Hoist.Api.Http;
 using Hoist.Api.Model;
+using System.Web;
+using System.Net;
 
 namespace Hoist.Api
 {
@@ -13,19 +15,9 @@ namespace Hoist.Api
     {
         private string _apiKey;
         private string _session;
-
         private IHttpLayer _httpLayer;
         internal JavaScriptSerializer Serialiser { get; private set;}
-
-        private class EndPoints
-        {
-            public const string Base = "https://auth.hoi.io/";
-            public const string CreateUser = Base + "user";
-            public const string Login = Base + "login";
-            public const string Status = Base + "status";
-            public const string Logout = Base + "logout";
-        }
-
+        
         public Hoist(string apiKey) : this(apiKey, new HoistHttpLayer()) { } 
 
         public Hoist(string apiKey, IHttpLayer httpLayer)
@@ -45,10 +37,10 @@ namespace Hoist.Api
 
         public HoistUser Status()
         {
-            var response = _httpLayer.Get(EndPoints.Status, _apiKey, _session);
+            var response = Get(EndPoints.Status);
             return ProcessHoistUser(response);
         }
-
+        
         public HoistCollection<HoistModel> GetCollection(string collectionName)
         {
             return GetCollection<HoistModel>(collectionName);
@@ -59,9 +51,44 @@ namespace Hoist.Api
             return new HoistCollection<CollectionType>(this, collectionName);
         }
 
+        public bool SendNotification(string notificationName, object parameters)
+        {
+            return ProcessNotificationResponse(Post(EndPoints.SendNotification + "/" + WebUtility.UrlEncode(notificationName ?? ""), parameters));           
+        }
+        
         internal ApiResponse Post(string endPoint, object data)
         {
             return _httpLayer.Post(endPoint, _apiKey, _session, Serialiser.Serialize(data));
+        }
+
+        internal ApiResponse Get(string endPoint)
+        {
+            return _httpLayer.Get(endPoint, _apiKey, _session);            
+        }
+
+        internal ApiResponse Delete(string endPoint)
+        {
+            return _httpLayer.Delete(endPoint, _apiKey, _session);
+        }
+
+        private bool ProcessNotificationResponse(ApiResponse response)
+        {
+            if (response.Code == 200)
+            {
+                //?? Serialiser.Deserialize<HoistModel>(response.Payload);
+                return true;
+            }
+            else if (response.Code == 401 && response.WithWWWAuthenticate)
+            {
+                throw new BadApiKeyException();
+            }
+            else if (response.Code == 404) {
+                throw new TemplateNotFoundException();
+            }
+            else
+            {
+                throw new UnexpectedResponseException(response);
+            }
         }
 
         private HoistUser ProcessHoistUser(ApiResponse response)

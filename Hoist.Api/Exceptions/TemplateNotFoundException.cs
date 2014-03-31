@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hoist.Api.Exceptions
 {
-    public class DataConflictException : Exception
+    public class TemplateNotFoundException : Exception
     {
-
     }
 }
