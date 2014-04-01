@@ -13,8 +13,9 @@ namespace Hoist.Console
             var client = new Hoist.Api.Hoist(args[0]);
             try
             {
-                System.Console.Out.WriteLine(client.Login(args[1], args[2]).ToString());
-                var usr = client.Status();
+                var usr = client.Login(args[1], args[2]);
+                System.Console.Out.WriteLine(usr != null ? usr.ToString() : "User Failed to Log In");
+                usr =  client.Status();
                 System.Console.Out.WriteLine(usr != null ? usr.ToString() : "No User Logged In");
 
                 var votes = client.GetCollection(args[3]);

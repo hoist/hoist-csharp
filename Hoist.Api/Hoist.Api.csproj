@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\DataConflictException.cs" />
+    <Compile Include="Exceptions\NoResponseException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\MissingPropertiesException.cs" />
     <Compile Include="Http\ApiResponse.cs" />
@@ -53,6 +54,9 @@
     <Compile Include="Http\EndPoints.cs" />
     <Compile Include="Http\HoistHttpLayer.cs" />
     <Compile Include="Http\ResponseProcessor.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LogManager.cs" />
+    <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Model\HoistCollection.cs" />
     <Compile Include="Model\HoistModelJavaScriptConverter.cs" />
     <Compile Include="Model\HoistUser.cs" />
@@ -61,6 +65,9 @@
     <Compile Include="Http\IHttpLayer.cs" />
     <Compile Include="Model\ReflectionUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Hoist.Api.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Andrew Cox</authors>
+    <owners>Andrew Cox</owners>
+    <projectUrl>http://hoistapps.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.Net interface to the Hoist platform</description>
+    <releaseNotes>First Release</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>Hoist</tags>
+  </metadata>
+</package>

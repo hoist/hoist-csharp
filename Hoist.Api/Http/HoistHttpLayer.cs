@@ -8,20 +8,23 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 
+using Hoist.Api.Exceptions;
+using Hoist.Api.Logging;
+
 namespace Hoist.Api.Http
 {
     class HoistHttpLayer : IHttpLayer
     {
+        private static ILogger logger = LogManager.GetLogger(typeof(HoistHttpLayer));
         
         public static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             if (sslPolicyErrors == SslPolicyErrors.None)
             {
-                //Console.WriteLine("Certificate Passed");
                 return true;
             }
 
-            //Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+            logger.Error("Certificate error: {0}", sslPolicyErrors.ToString());
 
             // Do not allow this client to communicate with unauthenticated servers. 
             return false;
@@ -29,7 +32,7 @@ namespace Hoist.Api.Http
 
         public ApiResponse Post(string endpoint, string apiKey, string session, string data)
         {
-            Console.WriteLine("{0} {1} {2} {3}", endpoint, apiKey, session, data);
+            logger.Debug("{0} {1} {2} {3}", endpoint, apiKey, session, data);  //TODO: Security Leak!!!
             var wr = WebRequest.CreateHttp(endpoint);
             wr.CookieContainer = new CookieContainer();
             wr.ServerCertificateValidationCallback = ValidateServerCertificate;
@@ -58,7 +61,7 @@ namespace Hoist.Api.Http
 
         public ApiResponse Get(string endpoint, string apiKey, string session)
         {
-            Console.WriteLine("{0} {1} {2}", endpoint, apiKey, session);
+            logger.Debug("{0} {1} {2}", endpoint, apiKey, session);
             var wr = WebRequest.CreateHttp(endpoint);
             wr.ServerCertificateValidationCallback = ValidateServerCertificate;
             wr.Headers.Add("Authorization", "Hoist " + apiKey);
@@ -82,21 +85,25 @@ namespace Hoist.Api.Http
             }
             catch (WebException ex)
             {
-                //Console.WriteLine(ex);
+                
                 response = (HttpWebResponse)ex.Response;
+                if (response == null)
+                {
+                    logger.Error("No response was returned: {0}", ex.ToString());
+                    //Something really bad has happend here!
+                    throw new NoResponseException(ex); 
+                }
             }
             var retval = new ApiResponse();
             retval.Code = (int)response.StatusCode;
             retval.Description = response.StatusDescription;
             retval.WithWWWAuthenticate = response.Headers["WWW-Authenticate"] != null;
 
-            //Console.WriteLine(response.Headers["Set-Cookie"]);
-
             if (response.Cookies.Count > 0)
             {
                 foreach (Cookie cookie in response.Cookies)
                 {
-                    Console.WriteLine(cookie.Name + "=" + cookie.Value);
+                    logger.Debug("Auth Cookie: {0}", cookie.Name + "=" + cookie.Value);
                     if (cookie.Name.StartsWith("hoist-session"))
                     {
                         retval.HoistSession = cookie.Name + "=" + cookie.Value;
@@ -115,6 +122,7 @@ namespace Hoist.Api.Http
         
         public ApiResponse Delete(string endpoint, string apiKey, string session)
         {
+            logger.Debug("{0} {1} {2}", endpoint, apiKey, session);
             var wr = WebRequest.CreateHttp(endpoint);
             wr.ServerCertificateValidationCallback = ValidateServerCertificate;
             wr.Headers.Add("Authorization", "Hoist " + apiKey);
