@@ -15,7 +15,16 @@ namespace Hoist.Console
             {
                 System.Console.Out.WriteLine(client.Login(args[1], args[2]).ToString());
                 var usr = client.Status();
-                System.Console.Out.WriteLine( usr != null ? usr.ToString() : "No User Logged In");
+                System.Console.Out.WriteLine(usr != null ? usr.ToString() : "No User Logged In");
+
+                var votes = client.GetCollection(args[3]);
+                foreach (var hd in votes.ToList())
+                {
+                    System.Console.Out.WriteLine(hd.Get("_id"));
+                }
+
+                client.Logout();
+                
             }
             catch (Exception ex)
             {

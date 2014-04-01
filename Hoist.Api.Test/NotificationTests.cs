@@ -78,7 +78,7 @@ namespace Hoist.Api.Test
             {
                 var sent = client.SendNotification("MyTestEmail", new { name = "Owen", Date = "25th December 2013", Message = "Merry Christmas" });
             }
-            catch (TemplateNotFoundException)
+            catch (NotFoundException)
             {
                 caughtException = true;
             }

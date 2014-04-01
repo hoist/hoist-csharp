@@ -6,8 +6,6 @@ using System.Web.Script.Serialization;
 using Hoist.Api.Exceptions;
 using Hoist.Api.Http;
 using Hoist.Api.Model;
-using System.Web;
-using System.Net;
 
 namespace Hoist.Api
 {
@@ -16,7 +14,8 @@ namespace Hoist.Api
         private string _apiKey;
         private string _session;
         private IHttpLayer _httpLayer;
-        internal JavaScriptSerializer Serialiser { get; private set;}
+        internal ResponseProcessor Processor { get; set; }
+        
         
         public Hoist(string apiKey) : this(apiKey, new HoistHttpLayer()) { } 
 
@@ -24,21 +23,26 @@ namespace Hoist.Api
         {
             _apiKey = apiKey;
             _httpLayer = httpLayer;
-            Serialiser = new JavaScriptSerializer();
-            Serialiser.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
+            Processor = new ResponseProcessor();
         }
 
         public HoistUser Login(string email, string password)
         {
-            var response = Post(EndPoints.Login, new LoginPayload(email, password)); 
+            var response = Post(EndPoints.GenerateEndPoint(eEndPointType.Login), new LoginPayload(email, password)); 
             _session = response.HoistSession;
-            return ProcessHoistUser(response);
+            return Processor.ProcessHoistData<HoistUser>(response);
         }
 
         public HoistUser Status()
         {
-            var response = Get(EndPoints.Status);
-            return ProcessHoistUser(response);
+            var response = Get(EndPoints.GenerateEndPoint(eEndPointType.Status));
+            return Processor.ProcessHoistData<HoistUser>(response);
+        }
+
+        public void Logout()
+        {
+            var response = Processor.ProcessHoistData<HoistModel>(Post(EndPoints.GenerateEndPoint(eEndPointType.Logout), null));
+            
         }
         
         public HoistCollection<HoistModel> GetCollection(string collectionName)
@@ -53,12 +57,13 @@ namespace Hoist.Api
 
         public bool SendNotification(string notificationName, object parameters)
         {
-            return ProcessNotificationResponse(Post(EndPoints.SendNotification + "/" + WebUtility.UrlEncode(notificationName ?? ""), parameters));           
+            var response = Processor.ProcessHoistData<HoistModel>(Post(EndPoints.GenerateEndPoint(eEndPointType.SendNotification, notificationName ?? ""), parameters));
+            return true;            
         }
         
         internal ApiResponse Post(string endPoint, object data)
         {
-            return _httpLayer.Post(endPoint, _apiKey, _session, Serialiser.Serialize(data));
+            return _httpLayer.Post(endPoint, _apiKey, _session, Processor.ToHoist(data));
         }
 
         internal ApiResponse Get(string endPoint)
@@ -70,48 +75,6 @@ namespace Hoist.Api
         {
             return _httpLayer.Delete(endPoint, _apiKey, _session);
         }
-
-        private bool ProcessNotificationResponse(ApiResponse response)
-        {
-            if (response.Code == 200)
-            {
-                //?? Serialiser.Deserialize<HoistModel>(response.Payload);
-                return true;
-            }
-            else if (response.Code == 401 && response.WithWWWAuthenticate)
-            {
-                throw new BadApiKeyException();
-            }
-            else if (response.Code == 404) {
-                throw new TemplateNotFoundException();
-            }
-            else
-            {
-                throw new UnexpectedResponseException(response);
-            }
-        }
-
-        private HoistUser ProcessHoistUser(ApiResponse response)
-        {
-            if (response.Code == 200)
-            {
-                return Serialiser.Deserialize<HoistUser>(response.Payload);
-            }
-            else if (response.Code == 401 && response.WithWWWAuthenticate)
-            {
-                throw new BadApiKeyException();
-            }
-            else if (response.Code == 401)
-            {
-                return null; //Failed to login
-            }
-            else
-            {
-                throw new UnexpectedResponseException(response);
-            }
-        }
-
-
-        
+         
     }
 }

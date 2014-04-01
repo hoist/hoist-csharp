@@ -41,14 +41,16 @@ namespace Hoist.Api.Http
             wr.Method = "POST";
             wr.ContentType = "application/json";
 
-            
-            UTF8Encoding encoding = new UTF8Encoding();
-            byte[] byte1 = encoding.GetBytes(data);
-            wr.ContentLength = byte1.Length;
-            var newStream = wr.GetRequestStream();
-            newStream.Write(byte1, 0, byte1.Length);
-            newStream.Close();
-            
+            if (data != null)
+            {
+                UTF8Encoding encoding = new UTF8Encoding();
+                byte[] byte1 = encoding.GetBytes(data);
+                wr.ContentLength = byte1.Length;
+                var newStream = wr.GetRequestStream();
+                newStream.Write(byte1, 0, byte1.Length);
+                newStream.Close();
+            }
+
             var retval = GetResponse(wr);
             return retval;
 
@@ -56,6 +58,7 @@ namespace Hoist.Api.Http
 
         public ApiResponse Get(string endpoint, string apiKey, string session)
         {
+            Console.WriteLine("{0} {1} {2}", endpoint, apiKey, session);
             var wr = WebRequest.CreateHttp(endpoint);
             wr.ServerCertificateValidationCallback = ValidateServerCertificate;
             wr.Headers.Add("Authorization", "Hoist " + apiKey);

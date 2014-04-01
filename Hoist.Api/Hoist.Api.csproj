@@ -44,15 +44,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\DataConflictException.cs" />
-    <Compile Include="Exceptions\DataNotFoundException.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\MissingPropertiesException.cs" />
-    <Compile Include="Exceptions\TemplateNotFoundException.cs" />
     <Compile Include="Http\ApiResponse.cs" />
     <Compile Include="Hoist.cs" />
     <Compile Include="Exceptions\BadApiKeyException.cs" />
     <Compile Include="Exceptions\UnexpectedResponseException.cs" />
     <Compile Include="Http\EndPoints.cs" />
     <Compile Include="Http\HoistHttpLayer.cs" />
+    <Compile Include="Http\ResponseProcessor.cs" />
     <Compile Include="Model\HoistCollection.cs" />
     <Compile Include="Model\HoistModelJavaScriptConverter.cs" />
     <Compile Include="Model\HoistUser.cs" />

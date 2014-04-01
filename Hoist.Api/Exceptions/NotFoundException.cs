@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hoist.Api.Exceptions
 {
-    public class DataNotFoundException : Exception
+    public class NotFoundException : Exception
     {
     }
 }

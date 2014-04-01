@@ -391,7 +391,7 @@ namespace Hoist.Api.Test
             {
                 collection.Get("1234");
             }
-            catch (DataNotFoundException)
+            catch (NotFoundException)
             {
                 caughtException = true;
             }

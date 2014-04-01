@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Hoist.Api;
 using System.Collections.Generic;
 using Hoist.Api.Http;
+using Hoist.Api.Exceptions;
 
 namespace Hoist.Api.Test
 {
@@ -86,7 +87,7 @@ namespace Hoist.Api.Test
             {
                 var usr = client.Login("Username", "Password");
             }
-            catch (Exceptions.BadApiKeyException)
+            catch (BadApiKeyException)
             {
                 caughtException = true;
             }
@@ -116,7 +117,7 @@ namespace Hoist.Api.Test
             {
                 var usr = client.Status();
             }
-            catch (Exceptions.BadApiKeyException)
+            catch (BadApiKeyException)
             {
                 caughtException = true;
             }
@@ -144,7 +145,7 @@ namespace Hoist.Api.Test
             {
                 var usr = client.Status();
             }
-            catch (Exceptions.UnexpectedResponseException)
+            catch (UnexpectedResponseException)
             {
                 caughtException = true;
             }
@@ -162,7 +163,7 @@ namespace Hoist.Api.Test
             {
                 var usr = client.Login("username", "password");
             }
-            catch (Exceptions.UnexpectedResponseException)
+            catch (UnexpectedResponseException)
             {
                 caughtException = true;
             }
@@ -170,6 +171,67 @@ namespace Hoist.Api.Test
             Assert.IsTrue(caughtException);
         }
 
+        [TestMethod]
+        public void CanLogOut()
+        {
+            var client = CreateHoist("MYAPIKEY");
+            httpLayer.Response = new ApiResponse
+            {
+                Code = 200,
+                WithWWWAuthenticate = false,
+                Payload = "{'role':'Member', 'id': '52b75440c69c80630a00000c'}",
+                HoistSession = "hoist-session-bmsucflxdbwkaccaodcs=s%3ACU7ClH2eINsE1QDWHK9uR7AN.eKWi2Q3xQWQW8ClGq7zrGH5eHVpXgQAnBCt5A2TpSrU"
+            };
+            client.Login("username", "password");
+            httpLayer.Response = new ApiResponse
+            {
+                Code = 200,
+                WithWWWAuthenticate = false,
+                Payload = "{\"status\":\"ok\"}",
+                HoistSession = ""
+            };
+            client.Logout();
+            Assert.IsTrue(httpLayer.Calls.Count == 2);
+            Assert.AreEqual("https://auth.hoi.io/logout", httpLayer.Calls[1].Item1);
+            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[1].Item2);
+            Assert.IsNull(httpLayer.Calls[1].Item3);
+            Assert.AreEqual("hoist-session-bmsucflxdbwkaccaodcs=s%3ACU7ClH2eINsE1QDWHK9uR7AN.eKWi2Q3xQWQW8ClGq7zrGH5eHVpXgQAnBCt5A2TpSrU", httpLayer.Calls[1].Item4);
+            
+
+        }
+
+        [TestMethod]
+        public void LogOutRaisesBadApiKeyOn401()
+        {
+            var client = CreateHoist("MYAPIKEY");
+            
+            httpLayer.Response = new ApiResponse
+            {
+                Code = 401,
+                WithWWWAuthenticate = true,
+                Payload = "",
+                HoistSession = ""
+            };
+
+            var caughtException = false;
+            try
+            {
+                client.Logout();
+            }
+            catch (BadApiKeyException)
+            {
+                caughtException = true;
+            }
+
+            Assert.IsTrue(caughtException);
+            Assert.IsTrue(httpLayer.Calls.Count == 1);
+            Assert.AreEqual("https://auth.hoi.io/logout", httpLayer.Calls[0].Item1);
+            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[0].Item2);
+            Assert.IsNull(httpLayer.Calls[0].Item3);
+            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
+
+
+        }
                     
     }
 
