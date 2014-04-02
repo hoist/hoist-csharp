@@ -23,11 +23,11 @@ namespace Hoist.Api.Test
             var sent = client.SendNotification("MyTestEmail", new { name = "Owen", Date = "25th December 2013", Message = "Merry Christmas" });
             Assert.IsTrue(sent);
             Assert.AreEqual(1, httpLayer.Calls.Count, "Calls API");
-            Assert.AreEqual("https://notify.hoi.io/notification/MyTestEmail", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"name\":\"Owen\",\"Date\":\"25th December 2013\",\"Message\":\"Merry Christmas\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("POST", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://notify.hoi.io/notification/MyTestEmail", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"name\":\"Owen\",\"Date\":\"25th December 2013\",\"Message\":\"Merry Christmas\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("POST", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -54,11 +54,11 @@ namespace Hoist.Api.Test
 
             Assert.IsTrue(caughtException);
             Assert.AreEqual(1, httpLayer.Calls.Count, "Calls API");
-            Assert.AreEqual("https://notify.hoi.io/notification/MyTestEmail", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"name\":\"Owen\",\"Date\":\"25th December 2013\",\"Message\":\"Merry Christmas\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("POST", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://notify.hoi.io/notification/MyTestEmail", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"name\":\"Owen\",\"Date\":\"25th December 2013\",\"Message\":\"Merry Christmas\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("POST", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -85,11 +85,11 @@ namespace Hoist.Api.Test
 
             Assert.IsTrue(caughtException);
             Assert.AreEqual(1, httpLayer.Calls.Count, "Calls API");
-            Assert.AreEqual("https://notify.hoi.io/notification/MyTestEmail", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"name\":\"Owen\",\"Date\":\"25th December 2013\",\"Message\":\"Merry Christmas\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("POST", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://notify.hoi.io/notification/MyTestEmail", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"name\":\"Owen\",\"Date\":\"25th December 2013\",\"Message\":\"Merry Christmas\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("POST", httpLayer.Calls[0].method);
         }
 
 

@@ -57,6 +57,7 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="Model\HoistBucket.cs" />
     <Compile Include="Model\HoistCollection.cs" />
     <Compile Include="Model\HoistModelJavaScriptConverter.cs" />
     <Compile Include="Model\HoistUser.cs" />

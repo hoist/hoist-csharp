@@ -40,10 +40,27 @@ namespace Hoist.Api
 
         public void Logout()
         {
-            var response = Processor.ProcessHoistData<HoistModel>(Post(EndPoints.GenerateEndPoint(eEndPointType.Logout), null));
-            
+            var response = Processor.ProcessHoistData<HoistModel>(Post(EndPoints.GenerateEndPoint(eEndPointType.Logout), null));   
         }
-        
+
+        public List<HoistBucket> ListBuckets()
+        {
+            var response = Get(EndPoints.GenerateEndPoint(eEndPointType.ListBuckets));
+            return Processor.ProcessHoistData<List<HoistBucket>>(response);
+        }
+
+        public bool CreateBucket(string bucketName)
+        {
+            return Processor.ProcessHoistData<HoistModel>(Post(EndPoints.GenerateEndPoint(eEndPointType.CreateBucket, bucketName), new { })) != null;
+        }
+
+        public bool SetCurrentBucket(HoistBucket bucket)
+        {
+            var response = Post(EndPoints.GenerateEndPoint(eEndPointType.SetCurrentBucket, bucket.key), new { });
+            Processor.ProcessResponse(response);
+            return true;
+        }
+
         public HoistCollection<HoistModel> GetCollection(string collectionName)
         {
             return GetCollection<HoistModel>(collectionName);
@@ -74,6 +91,8 @@ namespace Hoist.Api
         {
             return _httpLayer.Delete(endPoint, _apiKey, _session);
         }
-         
+
+
+        
     }
 }

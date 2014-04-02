@@ -9,15 +9,39 @@ namespace Hoist.Api.Test
 {
     public class MockHttpLayer : IHttpLayer
     {
+        public class HttpCall
+        {
+            public string endpoint = null;
+            public string apiKey = null;
+            public string session = null;
+            public string data = null;
+            public string method = null;
 
-        public List<Tuple<string, string, string, string,string>> Calls = new List<Tuple<string, string, string, string, string>>();
+            public static HttpCall GET(string endpoint, string apiKey, string session)
+            {
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "GET" };
+            }
+
+            public static HttpCall POST(string endpoint, string apiKey, string session, string data)
+            {
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "POST", data = data };
+            }
+
+            public static HttpCall DELETE(string endpoint, string apiKey, string session)
+            {
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "DELETE" };
+            }
+        }
+
+        public List<HttpCall> Calls = new List<HttpCall>();
 
         public ApiResponse Response = null;
         public Exception ErrorToThrow = null;
 
         public ApiResponse Post(string endpoint, string apiKey, string session, string data)
         {
-            Calls.Add(new Tuple<string, string, string, string, string>(endpoint, apiKey, data, session, "POST"));
+            Calls.Add(HttpCall.POST(endpoint, apiKey, session, data));
+            
             if (ErrorToThrow != null)
             {
                 throw ErrorToThrow;
@@ -27,7 +51,7 @@ namespace Hoist.Api.Test
 
         public ApiResponse Get(string endpoint, string apiKey, string session)
         {
-            Calls.Add(new Tuple<string, string, string, string,string>(endpoint, apiKey, null, session, "GET"));
+            Calls.Add(HttpCall.GET(endpoint, apiKey, session));
             if (ErrorToThrow != null)
             {
                 throw ErrorToThrow;
@@ -37,7 +61,7 @@ namespace Hoist.Api.Test
 
         public ApiResponse Delete(string endpoint, string apiKey, string session)
         {
-            Calls.Add(new Tuple<string, string, string, string, string>(endpoint, apiKey, null, session, "DELETE"));
+            Calls.Add(HttpCall.DELETE(endpoint, apiKey, session));
             if (ErrorToThrow != null)
             {
                 throw ErrorToThrow;

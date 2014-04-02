@@ -72,10 +72,10 @@ namespace Hoist.Api.Test
             Assert.IsNotNull(myInsert);
             Assert.AreEqual("v1", myInsert.Get("k1"));
             Assert.AreEqual("1231313", myInsert.Get("_id"));
-            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual( "{\"k1\":\"v1\"}" , httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
+            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual( "{\"k1\":\"v1\"}" , httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
 
         }
 
@@ -102,10 +102,10 @@ namespace Hoist.Api.Test
             Assert.IsNotNull(myInsert);
             Assert.AreEqual("Andrew", myInsert.Name);
             Assert.AreEqual(34, myInsert.Age);
-            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"Name\":\"Andrew\",\"Age\":34}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
+            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"Name\":\"Andrew\",\"Age\":34}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
         }
 
         [TestMethod]
@@ -140,10 +140,10 @@ namespace Hoist.Api.Test
             Assert.IsNotNull(myInsert);
             Assert.AreEqual("Andrew", myInsert.Name);
             Assert.AreEqual(34, myInsert.Age);
-            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[1].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[1].Item2);
-            Assert.AreEqual("{\"Name\":\"Andrew\",\"Age\":34}", httpLayer.Calls[1].Item3);
-            Assert.AreEqual(hoistSession, httpLayer.Calls[1].Item4);
+            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[1].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[1].apiKey);
+            Assert.AreEqual("{\"Name\":\"Andrew\",\"Age\":34}", httpLayer.Calls[1].data);
+            Assert.AreEqual(hoistSession, httpLayer.Calls[1].session);
         }
 
         [TestMethod]
@@ -217,11 +217,11 @@ namespace Hoist.Api.Test
             Assert.AreEqual(17, peps[1].Age);
 
             Assert.AreEqual(1, httpLayer.Calls.Count, "To List Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("GET", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual(null, httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("GET", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -249,11 +249,11 @@ namespace Hoist.Api.Test
             Assert.AreEqual("1231314", peps[1].Get("_id"));
 
             Assert.AreEqual(1, httpLayer.Calls.Count, "To List Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("GET", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual(null, httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("GET", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -306,11 +306,11 @@ namespace Hoist.Api.Test
             Assert.AreEqual("1231313", pep.Get("_id"));
 
             Assert.AreEqual(1, httpLayer.Calls.Count, "To List Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("GET", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual(null, httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("GET", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -336,11 +336,11 @@ namespace Hoist.Api.Test
             //Assert.AreEqual("1231313", pep.Get("_id"));
 
             Assert.AreEqual(1, httpLayer.Calls.Count, "To List Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("GET", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual(null, httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("GET", httpLayer.Calls[0].method);
 
         }
 
@@ -484,11 +484,11 @@ namespace Hoist.Api.Test
             Assert.AreEqual("xx-xx", pep.Get("_rev"));
 
             Assert.AreEqual(1, httpLayer.Calls.Count, "To List Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"Name\":\"Bobby\",\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("POST", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"Name\":\"Bobby\",\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("POST", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -513,11 +513,11 @@ namespace Hoist.Api.Test
             Assert.AreEqual("xx-xy", pep._rev);
 
             Assert.AreEqual(1, httpLayer.Calls.Count, "To List Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"Name\":\"Bobby\",\"Age\":0,\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("POST", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"Name\":\"Bobby\",\"Age\":0,\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("POST", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -545,11 +545,11 @@ namespace Hoist.Api.Test
             }
             Assert.IsTrue(caughtException);
             Assert.AreEqual(1, httpLayer.Calls.Count, "To List Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"Name\":\"Bobby\",\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("POST", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"Name\":\"Bobby\",\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("POST", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -577,11 +577,11 @@ namespace Hoist.Api.Test
             }
             Assert.IsTrue(caughtException);
             Assert.AreEqual(1, httpLayer.Calls.Count, "To List Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"Name\":\"Bobby\",\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("POST", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"Name\":\"Bobby\",\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("POST", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -609,11 +609,11 @@ namespace Hoist.Api.Test
             }
             Assert.IsTrue(caughtException);
             Assert.AreEqual(1, httpLayer.Calls.Count, "Delete Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("DELETE", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual(null, httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("DELETE", httpLayer.Calls[0].method);
             
         }
 
@@ -633,11 +633,11 @@ namespace Hoist.Api.Test
             var wasDeleted = collection.Delete("1231313");
             Assert.IsTrue(wasDeleted);
             Assert.AreEqual(1, httpLayer.Calls.Count, "Delete Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("DELETE", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual(null, httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("DELETE", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -656,11 +656,11 @@ namespace Hoist.Api.Test
             var wasDeleted = collection.Delete();
             Assert.IsTrue(wasDeleted);
             Assert.AreEqual(1, httpLayer.Calls.Count, "Delete Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("DELETE", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual(null, httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("DELETE", httpLayer.Calls[0].method);
         }
 
         [TestMethod]
@@ -686,11 +686,11 @@ namespace Hoist.Api.Test
             Assert.AreEqual("xx-xy", pep._rev);
 
             Assert.AreEqual(1, httpLayer.Calls.Count, "Calls API");
-            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313?force=true", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPI", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"Name\":\"Bobby\",\"Age\":0,\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
-            Assert.AreEqual("POST", httpLayer.Calls[0].Item5);
+            Assert.AreEqual("https://data.hoi.io/MyCollection/1231313?force=true", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPI", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"Name\":\"Bobby\",\"Age\":0,\"_id\":\"1231313\",\"_rev\":\"xx-xx\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
+            Assert.AreEqual("POST", httpLayer.Calls[0].method);
 
         }
 
@@ -708,19 +708,19 @@ namespace Hoist.Api.Test
             var client = new Hoist("MYAPI", httpLayer);
             var collection = client.GetCollection("CollectionX");
             var pep = collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" }, { "_id", "" }, { "_rev", "xx-xx" } }));
-            Assert.AreEqual("https://data.hoi.io/CollectionX/", httpLayer.Calls[0].Item1);
+            Assert.AreEqual("https://data.hoi.io/CollectionX/", httpLayer.Calls[0].endpoint);
             pep = collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" }, { "_id", null }, { "_rev", "xx-xx" } }));
-            Assert.AreEqual("https://data.hoi.io/CollectionX/", httpLayer.Calls[1].Item1);
+            Assert.AreEqual("https://data.hoi.io/CollectionX/", httpLayer.Calls[1].endpoint);
             pep = collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" }, { "_id", "-56-45?force=url" }, { "_rev", "xx-xx" } }));
-            Assert.AreEqual("https://data.hoi.io/CollectionX/-56-45%3Fforce%3Durl", httpLayer.Calls[2].Item1);
+            Assert.AreEqual("https://data.hoi.io/CollectionX/-56-45%3Fforce%3Durl", httpLayer.Calls[2].endpoint);
 
             collection = client.GetCollection("CollectionX?why");
             pep = collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" }, { "_id", "" }, { "_rev", "xx-xx" } }));
-            Assert.AreEqual("https://data.hoi.io/CollectionX%3Fwhy/", httpLayer.Calls[3].Item1);
+            Assert.AreEqual("https://data.hoi.io/CollectionX%3Fwhy/", httpLayer.Calls[3].endpoint);
             pep = collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" }, { "_id", null }, { "_rev", "xx-xx" } }));
-            Assert.AreEqual("https://data.hoi.io/CollectionX%3Fwhy/", httpLayer.Calls[4].Item1);
+            Assert.AreEqual("https://data.hoi.io/CollectionX%3Fwhy/", httpLayer.Calls[4].endpoint);
             pep = collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" }, { "_id", "-56-45?force=url" }, { "_rev", "xx-xx" } }));
-            Assert.AreEqual("https://data.hoi.io/CollectionX%3Fwhy/-56-45%3Fforce%3Durl", httpLayer.Calls[5].Item1);
+            Assert.AreEqual("https://data.hoi.io/CollectionX%3Fwhy/-56-45%3Fforce%3Durl", httpLayer.Calls[5].endpoint);
 
         }
 

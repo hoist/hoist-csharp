@@ -60,18 +60,18 @@ namespace Hoist.Api.Test
             Assert.AreEqual("Member", usr.Role);
             Assert.AreEqual("52b75440c69c80630a00000c", usr.Id);
             //Check the right URLs were called
-            Assert.AreEqual("https://auth.hoi.io/login", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[0].Item2);
-            Assert.AreEqual("{\"email\":\"Username\",\"password\":\"Password\"}", httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
+            Assert.AreEqual("https://auth.hoi.io/login", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[0].apiKey);
+            Assert.AreEqual("{\"email\":\"Username\",\"password\":\"Password\"}", httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
                         
             usr = client.Status();
             Assert.IsNotNull(usr);
             Assert.IsTrue(httpLayer.Calls.Count == 2);
-            Assert.AreEqual("https://auth.hoi.io/status", httpLayer.Calls[1].Item1);
-            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[1].Item2);
-            Assert.AreEqual(null, httpLayer.Calls[1].Item3);
-            Assert.AreEqual("hoist-session-bmsucflxdbwkaccaodcs=s%3ACU7ClH2eINsE1QDWHK9uR7AN.eKWi2Q3xQWQW8ClGq7zrGH5eHVpXgQAnBCt5A2TpSrU", httpLayer.Calls[1].Item4);
+            Assert.AreEqual("https://auth.hoi.io/status", httpLayer.Calls[1].endpoint);
+            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[1].apiKey);
+            Assert.AreEqual(null, httpLayer.Calls[1].data);
+            Assert.AreEqual("hoist-session-bmsucflxdbwkaccaodcs=s%3ACU7ClH2eINsE1QDWHK9uR7AN.eKWi2Q3xQWQW8ClGq7zrGH5eHVpXgQAnBCt5A2TpSrU", httpLayer.Calls[1].session);
             Assert.AreEqual("Member", usr.Role);
             Assert.AreEqual("52b75440c69c80630a00000c", usr.Id);
         }
@@ -192,10 +192,10 @@ namespace Hoist.Api.Test
             };
             client.Logout();
             Assert.IsTrue(httpLayer.Calls.Count == 2);
-            Assert.AreEqual("https://auth.hoi.io/logout", httpLayer.Calls[1].Item1);
-            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[1].Item2);
-            Assert.IsNull(httpLayer.Calls[1].Item3);
-            Assert.AreEqual("hoist-session-bmsucflxdbwkaccaodcs=s%3ACU7ClH2eINsE1QDWHK9uR7AN.eKWi2Q3xQWQW8ClGq7zrGH5eHVpXgQAnBCt5A2TpSrU", httpLayer.Calls[1].Item4);
+            Assert.AreEqual("https://auth.hoi.io/logout", httpLayer.Calls[1].endpoint);
+            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[1].apiKey);
+            Assert.IsNull(httpLayer.Calls[1].data);
+            Assert.AreEqual("hoist-session-bmsucflxdbwkaccaodcs=s%3ACU7ClH2eINsE1QDWHK9uR7AN.eKWi2Q3xQWQW8ClGq7zrGH5eHVpXgQAnBCt5A2TpSrU", httpLayer.Calls[1].session);
             
 
         }
@@ -225,10 +225,10 @@ namespace Hoist.Api.Test
 
             Assert.IsTrue(caughtException);
             Assert.IsTrue(httpLayer.Calls.Count == 1);
-            Assert.AreEqual("https://auth.hoi.io/logout", httpLayer.Calls[0].Item1);
-            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[0].Item2);
-            Assert.IsNull(httpLayer.Calls[0].Item3);
-            Assert.AreEqual(null, httpLayer.Calls[0].Item4);
+            Assert.AreEqual("https://auth.hoi.io/logout", httpLayer.Calls[0].endpoint);
+            Assert.AreEqual("MYAPIKEY", httpLayer.Calls[0].apiKey);
+            Assert.IsNull(httpLayer.Calls[0].data);
+            Assert.AreEqual(null, httpLayer.Calls[0].session);
 
 
         }

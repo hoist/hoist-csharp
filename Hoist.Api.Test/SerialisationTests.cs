@@ -124,6 +124,15 @@ namespace Hoist.Api.Test
 
         }
 
+        [TestMethod]
+        public void SerialiseEmptyString()
+        {
+            var serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
+            var serializedResult = serializer.Deserialize<HoistModel>("");
+            Assert.IsNull(serializedResult);
+        }
+
 
        
 
