@@ -11,11 +11,11 @@ namespace Hoist.Api.Model
     {
         public string Name { get; private set; }
         public bool HasToken { get { return !String.IsNullOrEmpty(_proxyToken); } }
-        internal Hoist Client { get; private set; }
+        internal HoistClient Client { get; private set; }
         private string _endpoint;
         private string _proxyToken;
 
-        public HoistProxy(Hoist client, string proxyName, string proxyToken)
+        public HoistProxy(HoistClient client, string proxyName, string proxyToken)
         {
             Client = client;
             Name = proxyName;

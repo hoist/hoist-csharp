@@ -27,7 +27,7 @@ namespace Hoist.Api.Test
                 Payload = "[]"
             };
             
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var buckets = client.ListBuckets();
             Assert.IsTrue(buckets.Count == 0, "Buckets should be empty");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
@@ -46,7 +46,7 @@ namespace Hoist.Api.Test
                 Payload = "[{\"key\":\"ping\"}]"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var buckets = client.ListBuckets();
             Assert.IsTrue(buckets.Count == 1, "Buckets should contain 1");
             Assert.AreEqual("ping", buckets[0].key);
@@ -66,7 +66,7 @@ namespace Hoist.Api.Test
                 Payload = "[{\"name\":\"myfirstbucket\",\"key\":\"wthpw\"},{\"name\":\"mysecondbucket\",\"key\":\"pvpmv\"},{\"meta\":{\"a\":\"b\"},\"key\":\"ping\"},{\"key\":\"pong\"}]"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var buckets = client.ListBuckets();
             Assert.AreEqual(4, buckets.Count, "Buckets should contain 3");
             Assert.AreEqual("wthpw", buckets[0].key);
@@ -89,7 +89,7 @@ namespace Hoist.Api.Test
                 WithWWWAuthenticate = false,
                 Payload = "{}"
             };
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var buckets = client.ListBuckets();
             Assert.IsNull(buckets);
             ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/buckets", "MYAPI", null), httplayer.Calls[0]);
@@ -105,7 +105,7 @@ namespace Hoist.Api.Test
                 WithWWWAuthenticate = true,
                 Payload = "Unauthorized"
             };
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var caughtEx = false;
             try
             {
@@ -130,7 +130,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"key\":\"pong\"}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var bucket = client.CreateBucket("MyBucket");
             Assert.AreEqual("pong", bucket.key, "Should return true if it worked");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
@@ -148,7 +148,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"key\":\"pong\", \"meta\":{\"a\":\"b\"}}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var bucket = client.CreateBucket("MyBucket", new HoistModel( new Dictionary<string, string>() { {"a","b"} } ) );
             Assert.AreEqual("pong", bucket.key, "Should return true if it worked");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
@@ -166,7 +166,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"message\":\"A bucket with that name already exists\"}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var caughtEx = false;
             try
             {
@@ -192,7 +192,7 @@ namespace Hoist.Api.Test
                 Payload = "{}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var worked = client.CreateBucket("MyBucket");
             Assert.IsNull(worked, "Should return null on 401");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
@@ -210,7 +210,7 @@ namespace Hoist.Api.Test
                 Payload = "Unauthorized"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var caughtEx = false;
             try
             {
@@ -236,7 +236,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"key\":\"ping\"}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
                         
             var bucket = client.EnterBucket("withpw");
             Assert.AreEqual("ping", bucket.key, "Should return bucket when setting bucket");
@@ -255,7 +255,7 @@ namespace Hoist.Api.Test
                 Payload = ""
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var caughtException = false;
             try
             {
@@ -282,7 +282,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"status\":\"ok\"}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var success = client.LeaveBucket();
 
             Assert.IsTrue(success, "Should return true");
@@ -302,7 +302,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"doNotKill\":true,\"name\":\"That request requires a user to be logged in\",\"logLevel\":6,\"resCode\":401,\"message\":\"Default Error Message\"}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             var success = client.LeaveBucket();
 
             Assert.IsTrue(success, "Should return true");
@@ -321,7 +321,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"key\":\"pong\", \"meta\":{\"a\":\"b\"}}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             HoistBucket bucket = client.CurrentBucket();
 
             Assert.AreEqual("pong", bucket.key);
@@ -342,7 +342,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"doNotKill\":true,\"name\":\"That request requires a user to be logged in\",\"logLevel\":6,\"resCode\":401,\"message\":\"Default Error Message\"}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             HoistBucket bucket = client.CurrentBucket();
 
             Assert.IsNull(bucket);
@@ -362,7 +362,7 @@ namespace Hoist.Api.Test
                 Payload = "{}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             HoistBucket bucket = client.CurrentBucket();
             Assert.IsNull(bucket);
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
@@ -380,7 +380,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"key\":\"pong\", \"meta\":{\"a\":\"b\"}}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             HoistBucket bucket = client.UpdateBucket(new HoistBucket()
             {
                 key = "pong",
@@ -404,7 +404,7 @@ namespace Hoist.Api.Test
                 Payload = "{}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             bool caughtException = false;
             try
             {
@@ -437,7 +437,7 @@ namespace Hoist.Api.Test
                 Payload = "{}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             bool caughtException = false;
             try
             {
@@ -470,7 +470,7 @@ namespace Hoist.Api.Test
                 Payload = "{}"
             };
 
-            var client = new Hoist("MYAPI", httplayer);
+            var client = new HoistClient("MYAPI", httplayer);
             bool caughtException = false;
             try
             {

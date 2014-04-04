@@ -8,20 +8,31 @@ namespace Hoist.Console
 {
     class ConsoleLogger : Hoist.Api.Logging.ILogger
     {
+        int _tabs;
+        public ConsoleLogger(int tabs)
+        {
+            _tabs = tabs;
+        }
+
+        private void Out(string msg)
+        {
+            System.Console.Write(String.Concat(Enumerable.Repeat("\t", _tabs)));
+            System.Console.WriteLine(msg);
+        }
 
         public void Debug(string format, params string[] parameters)
         {
-            System.Console.WriteLine("DEBUG: "+format,  parameters);
+           Out(String.Format("DEBUG: "+format,  parameters));
         }
 
         public void Error(string format, params string[] parameters)
         {
-            System.Console.WriteLine("ERROR: " + format, parameters);
+            Out(String.Format("ERROR: " + format, parameters));
         }
 
         public void Info(string format, params string[] parameters)
         {
-            System.Console.WriteLine("INFO: " + format, parameters);
+            Out(String.Format("INFO: " + format, parameters));
         }
     }
 }

@@ -49,7 +49,7 @@
     <Compile Include="Exceptions\MissingPropertiesException.cs" />
     <Compile Include="Exceptions\UnauthorisedException.cs" />
     <Compile Include="Http\ApiResponse.cs" />
-    <Compile Include="Hoist.cs" />
+    <Compile Include="HoistClient.cs" />
     <Compile Include="Exceptions\BadApiKeyException.cs" />
     <Compile Include="Exceptions\UnexpectedResponseException.cs" />
     <Compile Include="Http\EndPoints.cs" />

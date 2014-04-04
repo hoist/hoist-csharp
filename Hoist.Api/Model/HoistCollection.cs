@@ -16,12 +16,12 @@ namespace Hoist.Api.Model
 
         public string Name { get; private set; }
         public Type ConversionType { get; private set; }
-        internal Hoist Client { get; private set; }
+        internal HoistClient Client { get; private set; }
         private string _endpoint;
 
         //TODO: Need to work out how to deal with _id , _rev
 
-        public HoistCollection(Hoist client, string name)
+        public HoistCollection(HoistClient client, string name)
         {
             Client = client;
             Name = name;

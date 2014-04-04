@@ -11,14 +11,14 @@ namespace Hoist.Api.Test
     public class ProxyTests
     {
         MockHttpLayer httpLayer = null;
-        Hoist client = null;
+        HoistClient client = null;
 
         [TestInitialize]
         public void TestInitalize()
         {
             httpLayer = new MockHttpLayer();
             httpLayer.Response = new ApiResponse() { Code = 500, Description = "UNKNOWN" };
-            client = new Hoist("MYAPI", httpLayer);
+            client = new HoistClient("MYAPI", httpLayer);
         }
 
         public void ConfirmCall(MockHttpLayer.HttpCall expectedCall, MockHttpLayer.HttpCall actual)

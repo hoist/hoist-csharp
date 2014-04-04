@@ -20,9 +20,9 @@ namespace Hoist.Api.Test
             httpLayer.Response = new ApiResponse() { Code = 500, Description = "UNKNOWN" };
         }
         
-        public Hoist CreateHoist(string apiKey)
+        public HoistClient CreateHoist(string apiKey)
         {
-            return new Hoist(apiKey, httpLayer);
+            return new HoistClient(apiKey, httpLayer);
         }
 
         [TestMethod]

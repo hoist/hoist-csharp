@@ -19,7 +19,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"status\":\"ok\"}"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var sent = client.SendNotification("MyTestEmail", new { name = "Owen", Date = "25th December 2013", Message = "Merry Christmas" });
             Assert.IsTrue(sent);
             Assert.AreEqual(1, httpLayer.Calls.Count, "Calls API");
@@ -40,7 +40,7 @@ namespace Hoist.Api.Test
                 WithWWWAuthenticate = true,
                 Payload = ""
             };
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
 
             var caughtException = false;
             try
@@ -71,7 +71,7 @@ namespace Hoist.Api.Test
                 WithWWWAuthenticate = false,
                 Payload = ""
             };
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
 
             var caughtException = false;
             try

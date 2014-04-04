@@ -29,7 +29,7 @@ namespace Hoist.Api.Test
         public void CanGetCollection()
         {
             var mockHttp = new MockHttpLayer();
-            var client = new Hoist("MYAPI", mockHttp);
+            var client = new HoistClient("MYAPI", mockHttp);
             var collection = client.GetCollection("MyCollection");
             Assert.IsNotNull(collection);
             Assert.AreEqual("MyCollection", collection.Name);
@@ -41,7 +41,7 @@ namespace Hoist.Api.Test
         public void CanGetTypedCollection()
         {
             var mockHttp = new MockHttpLayer();
-            var client = new Hoist("MYAPI", mockHttp);
+            var client = new HoistClient("MYAPI", mockHttp);
             var collection = client.GetCollection<Person>("MyCollection");
             Assert.IsNotNull(collection);
             Assert.AreEqual("MyCollection", collection.Name);
@@ -60,7 +60,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"k1\":\"v1\", \"_id\":\"1231313\"}"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("MyCollection");
             Assert.IsNotNull(collection);
             Assert.AreEqual("MyCollection", collection.Name);
@@ -90,7 +90,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"Name\":\"Andrew\",\"Age\":\"34\",\"_id\":\"1231313\"}"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection<Person>("MyCollection");
             Assert.IsNotNull(collection);
             Assert.AreEqual("MyCollection", collection.Name);
@@ -122,7 +122,7 @@ namespace Hoist.Api.Test
             };
 
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             client.Login("email", "password");
 
             var collection = client.GetCollection<Person>("MyCollection");
@@ -157,7 +157,7 @@ namespace Hoist.Api.Test
                 Payload = ""
             };
             var caughtError = false;
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection<Person>("MyCollection");
             try
             {
@@ -181,7 +181,7 @@ namespace Hoist.Api.Test
                 Payload = ""
             };
             var caughtError = false;
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection<Person>("MyCollection");
             try
             {
@@ -198,7 +198,7 @@ namespace Hoist.Api.Test
         public void CanToListTypedCollection()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             
             var collection = client.GetCollection<Person>("MyCollection");
                         
@@ -228,7 +228,7 @@ namespace Hoist.Api.Test
         public void CanToListUnTypedCollection()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
 
             var collection = client.GetCollection("MyCollection");
 
@@ -260,7 +260,7 @@ namespace Hoist.Api.Test
         public void ToListExceptionOn401()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
 
             var collection = client.GetCollection("MyCollection");
 
@@ -287,7 +287,7 @@ namespace Hoist.Api.Test
         public void GetOnUntypedCollectionWorks()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
 
             var collection = client.GetCollection("MyCollection");
 
@@ -317,7 +317,7 @@ namespace Hoist.Api.Test
         public void GetOnTypedCollectionWorks()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
 
             var collection = client.GetCollection<Person>("MyCollection");
 
@@ -348,7 +348,7 @@ namespace Hoist.Api.Test
         public void GetExceptionOn401()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
 
             var collection = client.GetCollection("MyCollection");
 
@@ -375,7 +375,7 @@ namespace Hoist.Api.Test
         public void GetExceptionOn404()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
 
             var collection = client.GetCollection("MyCollection");
 
@@ -402,7 +402,7 @@ namespace Hoist.Api.Test
         public void UpdateFailsWithoutRequiredSystemParamsUntyped()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("MyCollection");
             var caughtException = false;
 
@@ -441,7 +441,7 @@ namespace Hoist.Api.Test
         public void UpdateFailsWithoutRequiredSystemParamsTyped()
         {
             var httpLayer = new MockHttpLayer();
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection<Person>("MyCollection");
             var caughtException = false;
 
@@ -473,7 +473,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"Name\":\"Bobby\",\"Age\":\"17\",\"_id\":\"1231313\",\"_rev\":\"xx-xx\",\"_type\":\"MyCollection\",\"_updatedDate\":\"2013-12-22T21:42:24.658Z\",\"_createdDate\":\"2013-12-22T21:42:24.658Z\" }"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("MyCollection");
             var pep = collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" }, { "_id", "1231313" }, { "_rev", "xx-xx" } }));
 
@@ -502,7 +502,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"Name\":\"Bobby\",\"Age\":\"17\",\"_id\":\"1231313\",\"_rev\":\"xx-xy\",\"_type\":\"MyCollection\",\"_updatedDate\":\"2013-12-22T21:42:24.658Z\",\"_createdDate\":\"2013-12-22T21:42:24.658Z\" }"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection<PersonWithHoist>("MyCollection");
             var pep = collection.Update( new PersonWithHoist() { Name= "Bobby", _id= "1231313" , _rev =  "xx-xx" });
 
@@ -531,7 +531,7 @@ namespace Hoist.Api.Test
                 Payload = ""
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("MyCollection");
             var caughtException = false;
             try
@@ -563,7 +563,7 @@ namespace Hoist.Api.Test
                 Payload = ""
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("MyCollection");
             var caughtException = false;
             try
@@ -595,7 +595,7 @@ namespace Hoist.Api.Test
                 Payload = ""
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("MyCollection");
             var caughtException = false;
             try
@@ -628,7 +628,7 @@ namespace Hoist.Api.Test
                 Payload = "{}"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("MyCollection");
             var wasDeleted = collection.Delete("1231313");
             Assert.IsTrue(wasDeleted);
@@ -651,7 +651,7 @@ namespace Hoist.Api.Test
                 Payload = "{}"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("MyCollection");
             var wasDeleted = collection.Delete();
             Assert.IsTrue(wasDeleted);
@@ -675,7 +675,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"Name\":\"Bobby\",\"Age\":\"17\",\"_id\":\"1231313\",\"_rev\":\"xx-xy\",\"_type\":\"MyCollection\",\"_updatedDate\":\"2013-12-22T21:42:24.658Z\",\"_createdDate\":\"2013-12-22T21:42:24.658Z\" }"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection<PersonWithHoist>("MyCollection");
             var pep = collection.Update(new PersonWithHoist() { Name = "Bobby", _id = "1231313", _rev = "xx-xx" }, true);
 
@@ -705,7 +705,7 @@ namespace Hoist.Api.Test
                 Payload = "{\"Name\":\"Bobby\",\"Age\":\"17\",\"_id\":\"1231313\",\"_rev\":\"xx-xy\",\"_type\":\"MyCollection\",\"_updatedDate\":\"2013-12-22T21:42:24.658Z\",\"_createdDate\":\"2013-12-22T21:42:24.658Z\" }"
             };
 
-            var client = new Hoist("MYAPI", httpLayer);
+            var client = new HoistClient("MYAPI", httpLayer);
             var collection = client.GetCollection("CollectionX");
             var pep = collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" }, { "_id", "" }, { "_rev", "xx-xx" } }));
             Assert.AreEqual("https://data.hoi.io/CollectionX/", httpLayer.Calls[0].endpoint);

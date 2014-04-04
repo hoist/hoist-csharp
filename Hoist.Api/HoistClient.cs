@@ -9,16 +9,16 @@ using Hoist.Api.Model;
 
 namespace Hoist.Api
 {
-    public class Hoist
+    public class HoistClient
     {
         private string _apiKey;
         private string _session;
         private IHttpLayer _httpLayer;
         internal ResponseProcessor Processor { get; set; }
         
-        public Hoist(string apiKey) : this(apiKey, new HoistHttpLayer()) { } 
+        public HoistClient(string apiKey) : this(apiKey, new HoistHttpLayer()) { } 
 
-        public Hoist(string apiKey, IHttpLayer httpLayer)
+        public HoistClient(string apiKey, IHttpLayer httpLayer)
         {
             _apiKey = apiKey;
             _httpLayer = httpLayer;
