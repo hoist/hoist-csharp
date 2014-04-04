@@ -49,16 +49,35 @@ namespace Hoist.Api
             return Processor.ProcessHoistData<List<HoistBucket>>(response);
         }
 
-        public bool CreateBucket(string bucketName)
+        public HoistBucket CreateBucket(string bucketName)
         {
-            return Processor.ProcessHoistData<HoistModel>(Post(EndPoints.GenerateEndPoint(eEndPointType.CreateBucket, bucketName), new { })) != null;
+            return CreateBucket(bucketName, new HoistModel());
         }
 
-        public bool SetCurrentBucket(HoistBucket bucket)
+        public HoistBucket CreateBucket(string bucketName, HoistModel hoistModel)
         {
-            var response = Post(EndPoints.GenerateEndPoint(eEndPointType.SetCurrentBucket, bucket.key), new { });
-            Processor.ProcessResponse(response);
+            return Processor.ProcessHoistData<HoistBucket>(Post(EndPoints.GenerateEndPoint(eEndPointType.CreateBucket, bucketName), hoistModel));
+        }
+
+        public HoistBucket EnterBucket(string key)
+        {
+            return Processor.ProcessHoistData<HoistBucket>(Post(EndPoints.GenerateEndPoint(eEndPointType.SetCurrentBucket, key), new { }));
+        }
+
+        public bool LeaveBucket()
+        {
+            var obj = Processor.ProcessResponse(Post(EndPoints.GenerateEndPoint(eEndPointType.SetCurrentBucket, "default"), new { }));
             return true;
+        }
+
+        public HoistBucket CurrentBucket()
+        {
+            return Processor.ProcessHoistData<HoistBucket>(Get(EndPoints.GenerateEndPoint(eEndPointType.GetCurrentBucket)), ignore404:true );
+        }
+
+        public HoistBucket UpdateBucket(HoistBucket bucket)
+        {
+            return Processor.ProcessHoistData<HoistBucket>(Post(EndPoints.GenerateEndPoint(eEndPointType.UpdateBucket, bucket.key), bucket.meta), ignore401:false);
         }
 
         public HoistCollection<HoistModel> GetCollection(string collectionName)
@@ -76,21 +95,39 @@ namespace Hoist.Api
             var response = Processor.ProcessHoistData<HoistModel>(Post(EndPoints.GenerateEndPoint(eEndPointType.SendNotification, notificationName ?? ""), parameters));
             return true;            
         }
-        
-        internal ApiResponse Post(string endPoint, object data)
+
+        public HoistProxy GetProxy(string proxyName)
         {
-            return _httpLayer.Post(endPoint, _apiKey, _session, Processor.ToHoist(data));
+            return GetProxy(proxyName, null);
         }
 
-        internal ApiResponse Get(string endPoint)
+        public HoistProxy GetProxy(string proxyName, string proxyToken)
         {
-            return _httpLayer.Get(endPoint, _apiKey, _session);            
+            return new HoistProxy(this, proxyName, proxyToken);
         }
 
-        internal ApiResponse Delete(string endPoint)
+        internal ApiResponse Post(string endPoint, object data, string oauthToken = null)
         {
-            return _httpLayer.Delete(endPoint, _apiKey, _session);
+            return _httpLayer.Post(endPoint, _apiKey, _session, oauthToken, Processor.ToHoist(data));
         }
+
+        internal ApiResponse Put(string endPoint, object data, string oauthToken = null)
+        {
+            return _httpLayer.Put(endPoint, _apiKey, _session, oauthToken, Processor.ToHoist(data));
+        }
+
+        internal ApiResponse Get(string endPoint, string oauthToken=null)
+        {
+            return _httpLayer.Get(endPoint, _apiKey, _session, oauthToken);            
+        }
+
+        internal ApiResponse Delete(string endPoint, string oauthToken = null)
+        {
+            return _httpLayer.Delete(endPoint, _apiKey, _session, oauthToken);
+        }
+
+
+
 
 
         

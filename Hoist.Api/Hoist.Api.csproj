@@ -47,6 +47,7 @@
     <Compile Include="Exceptions\NoResponseException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\MissingPropertiesException.cs" />
+    <Compile Include="Exceptions\UnauthorisedException.cs" />
     <Compile Include="Http\ApiResponse.cs" />
     <Compile Include="Hoist.cs" />
     <Compile Include="Exceptions\BadApiKeyException.cs" />
@@ -60,6 +61,8 @@
     <Compile Include="Model\HoistBucket.cs" />
     <Compile Include="Model\HoistCollection.cs" />
     <Compile Include="Model\HoistModelJavaScriptConverter.cs" />
+    <Compile Include="Model\HoistProxy.cs" />
+    <Compile Include="Model\HoistProxyResponse.cs" />
     <Compile Include="Model\HoistUser.cs" />
     <Compile Include="Model\LoginPayload.cs" />
     <Compile Include="Model\HoistModel.cs" />

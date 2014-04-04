@@ -8,11 +8,12 @@ namespace Hoist.Api.Model
 {
     public class HoistBucket
     {
-        public string name;
-        public string owner;
-        public string _id;
+        //public string name;
+        //public string owner;
+        //public string _id;
         public string key;
-        public List<string> members;
+        public HoistModel meta;
+        //public List<string> members;
 
     }
 }

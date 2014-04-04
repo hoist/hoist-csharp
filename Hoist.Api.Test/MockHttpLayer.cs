@@ -16,10 +16,16 @@ namespace Hoist.Api.Test
             public string session = null;
             public string data = null;
             public string method = null;
+            public string oauth = null;
 
             public static HttpCall GET(string endpoint, string apiKey, string session)
             {
                 return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "GET" };
+            }
+
+            public static HttpCall GET(string endpoint, string apiKey, string session, string oauth)
+            {
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "GET", oauth=oauth };
             }
 
             public static HttpCall POST(string endpoint, string apiKey, string session, string data)
@@ -27,9 +33,29 @@ namespace Hoist.Api.Test
                 return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "POST", data = data };
             }
 
+            public static HttpCall POST(string endpoint, string apiKey, string session, string data, string oauth)
+            {
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "POST", data = data, oauth = oauth };
+            }
+
+            public static HttpCall PUT(string endpoint, string apiKey, string session, string data)
+            {
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "PUT", data = data };
+            }
+
+            public static HttpCall PUT(string endpoint, string apiKey, string session, string data, string oauth)
+            {
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "PUT", data = data, oauth=oauth };
+            }
+
             public static HttpCall DELETE(string endpoint, string apiKey, string session)
             {
                 return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "DELETE" };
+            }
+
+            public static HttpCall DELETE(string endpoint, string apiKey, string session, string oauth)
+            {
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "DELETE", oauth=oauth };
             }
         }
 
@@ -38,9 +64,9 @@ namespace Hoist.Api.Test
         public ApiResponse Response = null;
         public Exception ErrorToThrow = null;
 
-        public ApiResponse Post(string endpoint, string apiKey, string session, string data)
+        public ApiResponse Post(string endpoint, string apiKey, string session, string oauth, string data)
         {
-            Calls.Add(HttpCall.POST(endpoint, apiKey, session, data));
+            Calls.Add(HttpCall.POST(endpoint, apiKey, session, data, oauth));
             
             if (ErrorToThrow != null)
             {
@@ -49,9 +75,10 @@ namespace Hoist.Api.Test
             return Response;
         }
 
-        public ApiResponse Get(string endpoint, string apiKey, string session)
+        public ApiResponse Put(string endpoint, string apiKey, string session, string oauth, string data)
         {
-            Calls.Add(HttpCall.GET(endpoint, apiKey, session));
+            Calls.Add(HttpCall.PUT(endpoint, apiKey, session, data, oauth));
+
             if (ErrorToThrow != null)
             {
                 throw ErrorToThrow;
@@ -59,15 +86,27 @@ namespace Hoist.Api.Test
             return Response;
         }
 
-        public ApiResponse Delete(string endpoint, string apiKey, string session)
+        public ApiResponse Get(string endpoint, string apiKey, string session, string oauth)
         {
-            Calls.Add(HttpCall.DELETE(endpoint, apiKey, session));
+            Calls.Add(HttpCall.GET(endpoint, apiKey, session, oauth));
             if (ErrorToThrow != null)
             {
                 throw ErrorToThrow;
             }
             return Response;
         }
+
+        public ApiResponse Delete(string endpoint, string apiKey, string session, string oauth)
+        {
+            Calls.Add(HttpCall.DELETE(endpoint, apiKey, session,oauth));
+            if (ErrorToThrow != null)
+            {
+                throw ErrorToThrow;
+            }
+            return Response;
+        }
+
+        
 
     }
 }

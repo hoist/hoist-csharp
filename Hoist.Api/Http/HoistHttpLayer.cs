@@ -30,20 +30,31 @@ namespace Hoist.Api.Http
             return false;
         }
 
-        public ApiResponse Post(string endpoint, string apiKey, string session, string data)
+        private HttpWebRequest CreateRequest(string endpoint, string method, string apiKey, string session, string oauthToken, string data)
         {
-            logger.Debug("{0} {1} {2} {3}", endpoint, apiKey, session, data);  //TODO: Security Leak!!!
+            logger.Debug("{3} {0} {1} {2}", endpoint, apiKey, session, method);
             var wr = WebRequest.CreateHttp(endpoint);
             wr.CookieContainer = new CookieContainer();
             wr.ServerCertificateValidationCallback = ValidateServerCertificate;
             wr.Headers.Add("Authorization", "Hoist " + apiKey);
+
             if (session != null)
             {
-                wr.Headers.Add("Cookie", session);
+                var cookiebits = session.Split('=');
+                logger.Debug("Adding Session Cookie {0} {1}", cookiebits);
+                wr.CookieContainer.Add(new Cookie(cookiebits[0], cookiebits[1], "/", ".hoi.io"));
+            }          
+           
+            if (oauthToken != null)
+            {
+                logger.Debug("Adding Oauth Cookie");
+                wr.Headers.Add("oauth", "TOKEN " + oauthToken);
             }
-            wr.Method = "POST";
-            wr.ContentType = "application/json";
+           
+            wr.Method = method;
 
+            wr.ContentType = "application/json";
+            
             if (data != null)
             {
                 UTF8Encoding encoding = new UTF8Encoding();
@@ -53,27 +64,28 @@ namespace Hoist.Api.Http
                 newStream.Write(byte1, 0, byte1.Length);
                 newStream.Close();
             }
-
-            var retval = GetResponse(wr);
-            return retval;
-
+            return wr;
         }
 
-        public ApiResponse Get(string endpoint, string apiKey, string session)
+        public ApiResponse Post(string endpoint, string apiKey, string session, string oauthToken,string data)
         {
-            logger.Debug("{0} {1} {2}", endpoint, apiKey, session);
-            var wr = WebRequest.CreateHttp(endpoint);
-            wr.ServerCertificateValidationCallback = ValidateServerCertificate;
-            wr.Headers.Add("Authorization", "Hoist " + apiKey);
-            if (session != null)
-            {
-                wr.Headers.Add("Cookie", session);
-            }
-            wr.Method = "GET";
-            wr.ContentType = "application/json";
+            return GetResponse(CreateRequest(endpoint, "POST", apiKey, session, oauthToken, data));
+        }
 
-            var retval = GetResponse(wr);
-            return retval;
+        public ApiResponse Put(string endpoint, string apiKey, string session, string oauthToken,string data)
+        {
+            return GetResponse(CreateRequest(endpoint, "PUT", apiKey, session, oauthToken, data));
+        }
+
+        public ApiResponse Get(string endpoint, string apiKey, string session, string oauthToken)
+        {
+            
+            return GetResponse(CreateRequest(endpoint, "GET", apiKey, session, oauthToken, null ));
+        }
+
+        public ApiResponse Delete(string endpoint, string apiKey, string session, string oauthToken)
+        {
+            return GetResponse(CreateRequest(endpoint, "DELETE", apiKey, session, oauthToken, null));
         }
 
         private static ApiResponse GetResponse(HttpWebRequest wr)
@@ -120,21 +132,6 @@ namespace Hoist.Api.Http
             return retval;
         }
         
-        public ApiResponse Delete(string endpoint, string apiKey, string session)
-        {
-            logger.Debug("{0} {1} {2}", endpoint, apiKey, session);
-            var wr = WebRequest.CreateHttp(endpoint);
-            wr.ServerCertificateValidationCallback = ValidateServerCertificate;
-            wr.Headers.Add("Authorization", "Hoist " + apiKey);
-            if (session != null)
-            {
-                wr.Headers.Add("Cookie", session);
-            }
-            wr.Method = "DELETE";
-            wr.ContentType = "application/json";
-
-            var retval = GetResponse(wr);
-            return retval;
-        }
+        
     }
 }

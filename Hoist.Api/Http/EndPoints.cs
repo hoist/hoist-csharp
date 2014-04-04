@@ -17,7 +17,10 @@ namespace Hoist.Api.Http
         CreateUser,
         ListBuckets,
         CreateBucket,
-        SetCurrentBucket
+        SetCurrentBucket,
+        GetCurrentBucket,
+        UpdateBucket,
+        Proxy
     }
 
     public class EndPoints
@@ -25,6 +28,7 @@ namespace Hoist.Api.Http
         private const string AuthBase = "https://auth.hoi.io/";
         private const string NotificationBase = "https://notify.hoi.io/";
         private const string DataBase = "https://data.hoi.io/";
+        private const string ProxyBase = "https://proxy.hoi.io/";
         //public const string CreateUser = AuthBase + "user";
         private const string Login = AuthBase + "login";
         private const string Status = AuthBase + "status";
@@ -54,19 +58,39 @@ namespace Hoist.Api.Http
                     return BucketBase + String.Join("/", additionalParameters.Select(x => WebUtility.UrlEncode(x)).ToArray());
                 case eEndPointType.SetCurrentBucket:
                     return CurrentBucket + "/" + String.Join("/", additionalParameters.Select(x => WebUtility.UrlEncode(x)).ToArray());
+                case eEndPointType.GetCurrentBucket:
+                    return CurrentBucket;
+                case eEndPointType.UpdateBucket:
+                    return BucketBase + String.Join("/", additionalParameters.Select(x => WebUtility.UrlEncode(x)).ToArray()) + "/meta";
+                case eEndPointType.Proxy:
+                    return ProxyBase + String.Join("/", additionalParameters.Select(x => WebUtility.UrlEncode(x)).ToArray());
                 default:
                     return "";
             }
         }
 
-        public static string AddToEndPoint(string endPoint, string key, string[] queryStringParmeters=null)
+        public static string AddToEndPoint(string endPoint, string key, string[] queryStringParmeters=null, bool encodeKey=true)
         {
             var newUrl = endPoint;
-            if (!newUrl.EndsWith("/"))
+            
+
+            if (encodeKey)
             {
-                newUrl += "/";
+                if (!newUrl.EndsWith("/"))
+                {
+                    newUrl += "/";
+                }
+                newUrl += WebUtility.UrlEncode(key);
             }
-            newUrl += WebUtility.UrlEncode(key);
+            else
+            {
+                if (!newUrl.EndsWith("/") && !key.StartsWith("/"))
+                {
+                    newUrl += "/";
+                }
+                newUrl += key;
+            }
+            
             if (queryStringParmeters!=null) {
                 newUrl += "?" + String.Join("&", queryStringParmeters);
             }

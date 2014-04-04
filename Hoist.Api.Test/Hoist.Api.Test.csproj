@@ -65,6 +65,7 @@
     <Compile Include="ExtractPropertiesTests.cs" />
     <Compile Include="NotificationTests.cs" />
     <Compile Include="BucketTests.cs" />
+    <Compile Include="ProxyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hoist.Api\Hoist.Api.csproj">

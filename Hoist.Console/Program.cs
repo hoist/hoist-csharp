@@ -10,6 +10,7 @@ namespace Hoist.Console
     {
         static void Main(string[] args)
         {
+            Hoist.Api.Logging.LogManager.SetGetLoggerFunc(x => new ConsoleLogger());
             var client = new Hoist.Api.Hoist(args[0]);
             try
             {

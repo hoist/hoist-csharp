@@ -18,7 +18,7 @@ namespace Hoist.Api.Http
             Serialiser.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
         }
 
-        public string ProcessResponse(ApiResponse response)
+        public string ProcessResponse(ApiResponse response, bool ignore404 = false, bool ignore401 = true)
         {
             //Throw Exceptions on bad responses otherwise just return self..
             if (response.Code == 200)
@@ -31,11 +31,23 @@ namespace Hoist.Api.Http
             }
             else if (response.Code == 401)
             {
-                return null;
+                if (ignore401) { return null; }
+                else
+                {
+                    throw new UnauthorisedException();
+                }
+            }
+            else if (response.Code == 403)
+            {
+                throw new UnauthorisedException();
             }
             else if (response.Code == 404)
             {
-                throw new NotFoundException();
+                if (ignore404) { return null; }
+                else
+                {
+                    throw new NotFoundException();
+                }
             }
             else if (response.Code == 409)
             {
@@ -47,9 +59,9 @@ namespace Hoist.Api.Http
             }
         }
 
-        public T ProcessHoistData<T>(ApiResponse response) where T : class
+        public T ProcessHoistData<T>(ApiResponse response, bool ignore404 = false, bool ignore401 = true) where T : class
         {
-            var payload = ProcessResponse(response);
+            var payload = ProcessResponse(response,ignore404, ignore401);
             return payload != null ? Serialiser.Deserialize<T>(payload) : null;
         }
 

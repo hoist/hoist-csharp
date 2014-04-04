@@ -43,18 +43,13 @@ namespace Hoist.Api.Test
             {
                 Code = 200,
                 WithWWWAuthenticate = false,
-                Payload = "[{\"name\":\"myfirstbucket\",\"owner\":\"530c623381aee28c0600000c\",\"_id\":\"533b27f14e7521fa0d00000b\",\"key\":\"wthpw\",\"members\":[\"530c623381aee28c0600000c\"]}]"
+                Payload = "[{\"key\":\"ping\"}]"
             };
 
             var client = new Hoist("MYAPI", httplayer);
             var buckets = client.ListBuckets();
             Assert.IsTrue(buckets.Count == 1, "Buckets should contain 1");
-            Assert.AreEqual("myfirstbucket", buckets[0].name);
-            Assert.AreEqual("530c623381aee28c0600000c", buckets[0].owner);
-            Assert.AreEqual("533b27f14e7521fa0d00000b", buckets[0]._id);
-            Assert.AreEqual("wthpw", buckets[0].key);
-            Assert.AreEqual(1, buckets[0].members.Count);
-            Assert.AreEqual("530c623381aee28c0600000c", buckets[0].members[0]);
+            Assert.AreEqual("ping", buckets[0].key);
             
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
             ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/buckets", "MYAPI", null), httplayer.Calls[0]);
@@ -68,26 +63,18 @@ namespace Hoist.Api.Test
             {
                 Code = 200,
                 WithWWWAuthenticate = false,
-                Payload = "[{\"name\":\"myfirstbucket\",\"owner\":\"530c623381aee28c0600000c\",\"_id\":\"533b27f14e7521fa0d00000b\",\"key\":\"wthpw\",\"members\":[\"530c623381aee28c0600000c\"]}, {\"name\":\"mysecondbucket\",\"owner\":\"530c623381aee28c0600000c\",\"_id\":\"533b27f14e7521fa0d00000c\",\"key\":\"pvpmv\",\"members\":[\"530c623381aee28c0600000c\"]}]"
+                Payload = "[{\"name\":\"myfirstbucket\",\"key\":\"wthpw\"},{\"name\":\"mysecondbucket\",\"key\":\"pvpmv\"},{\"meta\":{\"a\":\"b\"},\"key\":\"ping\"},{\"key\":\"pong\"}]"
             };
 
             var client = new Hoist("MYAPI", httplayer);
             var buckets = client.ListBuckets();
-            Assert.IsTrue(buckets.Count == 2, "Buckets should contain 2");
-            Assert.AreEqual("myfirstbucket", buckets[0].name);
-            Assert.AreEqual("530c623381aee28c0600000c", buckets[0].owner);
-            Assert.AreEqual("533b27f14e7521fa0d00000b", buckets[0]._id);
+            Assert.AreEqual(4, buckets.Count, "Buckets should contain 3");
             Assert.AreEqual("wthpw", buckets[0].key);
-            Assert.AreEqual(1, buckets[0].members.Count);
-            Assert.AreEqual("530c623381aee28c0600000c", buckets[0].members[0]);
-
-            Assert.AreEqual("mysecondbucket", buckets[1].name);
-            Assert.AreEqual("530c623381aee28c0600000c", buckets[1].owner);
-            Assert.AreEqual("533b27f14e7521fa0d00000c", buckets[1]._id);
+            Assert.AreEqual(null, buckets[0].meta);   
             Assert.AreEqual("pvpmv", buckets[1].key);
-            Assert.AreEqual(1, buckets[1].members.Count);
-            Assert.AreEqual("530c623381aee28c0600000c", buckets[1].members[0]);
-
+            Assert.AreEqual("ping", buckets[2].key);
+            Assert.AreEqual(1, buckets[2].meta.Keys.Count);
+            Assert.AreEqual("pong", buckets[3].key);            
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
             ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/buckets", "MYAPI", null), httplayer.Calls[0]);
         }
@@ -140,14 +127,32 @@ namespace Hoist.Api.Test
             {
                 Code = 200,
                 WithWWWAuthenticate = false,
-                Payload = "{}"
+                Payload = "{\"key\":\"pong\"}"
             };
 
             var client = new Hoist("MYAPI", httplayer);
-            bool worked = client.CreateBucket("MyBucket");
-            Assert.IsTrue(worked, "Should return true if it worked");
+            var bucket = client.CreateBucket("MyBucket");
+            Assert.AreEqual("pong", bucket.key, "Should return true if it worked");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
             ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/MyBucket", "MYAPI", null, "{}"), httplayer.Calls[0]);
+        }
+
+        [TestMethod]
+        public void CanCreateBucketWithMeta()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 200,
+                WithWWWAuthenticate = false,
+                Payload = "{\"key\":\"pong\", \"meta\":{\"a\":\"b\"}}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            var bucket = client.CreateBucket("MyBucket", new HoistModel( new Dictionary<string, string>() { {"a","b"} } ) );
+            Assert.AreEqual("pong", bucket.key, "Should return true if it worked");
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/MyBucket", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
         }
 
         [TestMethod]
@@ -165,7 +170,7 @@ namespace Hoist.Api.Test
             var caughtEx = false;
             try
             {
-                bool worked = client.CreateBucket("MyBucket");
+                var worked = client.CreateBucket("MyBucket");
             }
             catch (Exceptions.DataConflictException)
             {
@@ -188,8 +193,8 @@ namespace Hoist.Api.Test
             };
 
             var client = new Hoist("MYAPI", httplayer);
-            bool worked = client.CreateBucket("MyBucket");
-            Assert.IsFalse(worked, "Should return false on 401");
+            var worked = client.CreateBucket("MyBucket");
+            Assert.IsNull(worked, "Should return null on 401");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
             ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/MyBucket", "MYAPI", null, "{}"), httplayer.Calls[0]);
         }
@@ -209,7 +214,7 @@ namespace Hoist.Api.Test
             var caughtEx = false;
             try
             {
-                bool worked = client.CreateBucket("MyBucket");
+                var worked = client.CreateBucket("MyBucket");
             }
             catch (Exceptions.BadApiKeyException)
             {
@@ -221,35 +226,292 @@ namespace Hoist.Api.Test
         }
 
         [TestMethod]
-        public void CanSetCurrentBucket()
+        public void CanEnterBucket()
         {
             var httplayer = new MockHttpLayer();
             httplayer.Response = new Http.ApiResponse()
             {
                 Code = 200,
                 WithWWWAuthenticate = false,
+                Payload = "{\"key\":\"ping\"}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+                        
+            var bucket = client.EnterBucket("withpw");
+            Assert.AreEqual("ping", bucket.key, "Should return bucket when setting bucket");
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/current/withpw", "MYAPI", null, "{}"), httplayer.Calls[0]);
+        }
+
+        [TestMethod]
+        public void CanEnterBucketReturns403WhenNoAccess()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 403,
+                WithWWWAuthenticate = false,
                 Payload = ""
             };
 
             var client = new Hoist("MYAPI", httplayer);
+            var caughtException = false;
+            try
+            {
+                var bucket = client.EnterBucket("withpw");
+            }
+            catch (Exceptions.UnauthorisedException)
+            {
+                caughtException = true;
+            }
 
-            var bucket = new HoistBucket() { 
-                name = "myfirstbucket", 
-                _id = "533b27f14e7521fa0d00000b", 
-                key = "withpw", 
-                owner = "530c623381aee28c0600000c" ,
-                members = new List<string>() { "530c623381aee28c0600000c" }
-            };
-
-            var success = client.SetCurrentBucket(bucket);
-            Assert.IsTrue(success, "Should return true when setting bucket");
+            Assert.IsTrue(caughtException, "Should raise exception");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
             ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/current/withpw", "MYAPI", null, "{}"), httplayer.Calls[0]);
+        }
 
+        [TestMethod]
+        public void CanLeaveBucket()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 200,
+                WithWWWAuthenticate = false,
+                Payload = "{\"status\":\"ok\"}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            var success = client.LeaveBucket();
+
+            Assert.IsTrue(success, "Should return true");
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/current/default", "MYAPI", null, "{}"), httplayer.Calls[0]);
+        
+        }
+
+        [TestMethod]
+        public void LeaveBucket401ReturnsTrue()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 401,
+                WithWWWAuthenticate = false,
+                Payload = "{\"doNotKill\":true,\"name\":\"That request requires a user to be logged in\",\"logLevel\":6,\"resCode\":401,\"message\":\"Default Error Message\"}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            var success = client.LeaveBucket();
+
+            Assert.IsTrue(success, "Should return true");
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/current/default", "MYAPI", null, "{}"), httplayer.Calls[0]);
+        }
+
+        [TestMethod]
+        public void CanGetCurrentBucket()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 200,
+                WithWWWAuthenticate = false,
+                Payload = "{\"key\":\"pong\", \"meta\":{\"a\":\"b\"}}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            HoistBucket bucket = client.CurrentBucket();
+
+            Assert.AreEqual("pong", bucket.key);
+            Assert.AreEqual("b", bucket.meta.Get("a"));            
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/bucket/current", "MYAPI", null), httplayer.Calls[0]);
+        
+        }
+
+        [TestMethod]
+        public void CurrentBucket401ReturnsNull()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 401,
+                WithWWWAuthenticate = false,
+                Payload = "{\"doNotKill\":true,\"name\":\"That request requires a user to be logged in\",\"logLevel\":6,\"resCode\":401,\"message\":\"Default Error Message\"}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            HoistBucket bucket = client.CurrentBucket();
+
+            Assert.IsNull(bucket);
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/bucket/current", "MYAPI", null), httplayer.Calls[0]);
+
+        }
+
+        [TestMethod]
+        public void CurrentBucket404ReturnsNull()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 404,
+                WithWWWAuthenticate = false,
+                Payload = "{}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            HoistBucket bucket = client.CurrentBucket();
+            Assert.IsNull(bucket);
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/bucket/current", "MYAPI", null), httplayer.Calls[0]);
+        }
+
+        [TestMethod]
+        public void CanUpdateBucket()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 200,
+                WithWWWAuthenticate = false,
+                Payload = "{\"key\":\"pong\", \"meta\":{\"a\":\"b\"}}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            HoistBucket bucket = client.UpdateBucket(new HoistBucket()
+            {
+                key = "pong",
+                meta = new HoistModel(new Dictionary<string, string>() { {"a","b"} } )
+            });
+
+            Assert.AreEqual("pong", bucket.key);
+            Assert.AreEqual("b", bucket.meta.Get("a"));
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
+        }
+
+        [TestMethod]
+        public void UpdateBucket404ReturnsException()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 404,
+                WithWWWAuthenticate = false,
+                Payload = "{}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            bool caughtException = false;
+            try
+            {
+                HoistBucket bucket = client.UpdateBucket(new HoistBucket()
+                {
+                    key = "pong",
+                    meta = new HoistModel(new Dictionary<string, string>() { { "a", "b" } })
+                });
+            }
+            catch (Exceptions.NotFoundException)
+            {
+                caughtException = true;
+
+            }
+
+            Assert.IsTrue(caughtException, "404 should return NotFoundException");            
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
+        
+        }
+
+        [TestMethod]
+        public void UpdateBucket403ReturnsException()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 403,
+                WithWWWAuthenticate = false,
+                Payload = "{}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            bool caughtException = false;
+            try
+            {
+                HoistBucket bucket = client.UpdateBucket(new HoistBucket()
+                {
+                    key = "pong",
+                    meta = new HoistModel(new Dictionary<string, string>() { { "a", "b" } })
+                });
+            }
+            catch (Exceptions.UnauthorisedException)
+            {
+                caughtException = true;
+
+            }
+
+            Assert.IsTrue(caughtException, "403 should return NotFoundException");
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
+
+        }
+
+        [TestMethod]
+        public void UpdateBucket401ReturnsException()
+        {
+            var httplayer = new MockHttpLayer();
+            httplayer.Response = new Http.ApiResponse()
+            {
+                Code = 401,
+                WithWWWAuthenticate = false,
+                Payload = "{}"
+            };
+
+            var client = new Hoist("MYAPI", httplayer);
+            bool caughtException = false;
+            try
+            {
+                HoistBucket bucket = client.UpdateBucket(new HoistBucket()
+                {
+                    key = "pong",
+                    meta = new HoistModel(new Dictionary<string, string>() { { "a", "b" } })
+                });
+            }
+            catch (Exceptions.UnauthorisedException)
+            {
+                caughtException = true;
+
+            }
+
+            Assert.IsTrue(caughtException, "403 should return NotFoundException");
+            Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
 
         }
 
 
+        
+        /*
+         * Bucket Auth Spec:
+
+    POST /bucket/<KEY>/meta
+      when the user is not logged in
+        - will return a 401 (unathorised) response
+        - will not modify the bucket
+
+      if no bucket with the key exists
+        - will return a 404 (not found) response
+
+      if the user doesn't own the bucket
+        - will return a 403 (forbidden) response
+
+      if the user has ownership of the bucket
+        - will return a 200 (ok) response
+        - will replace the meta data for the bucket with the POST body
+*/
 
 
     }

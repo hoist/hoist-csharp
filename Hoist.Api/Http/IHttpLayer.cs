@@ -8,9 +8,10 @@ namespace Hoist.Api.Http
 {
     public interface IHttpLayer
     {
-        ApiResponse Post(string endpoint, string apiKey, string session, string data);
-        ApiResponse Get(string endpoint, string apiKey, string session);
-        ApiResponse Delete(string endpoint, string apiKey, string session);
+        ApiResponse Post(string endpoint, string apiKey, string session, string oauthToken, string data);
+        ApiResponse Get(string endpoint, string apiKey, string session, string oauthToken);
+        ApiResponse Delete(string endpoint, string apiKey, string session, string oauthToken);
+        ApiResponse Put(string endpoint, string apiKey, string session, string oauthToken, string data);
     }
 
 }
