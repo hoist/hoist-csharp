@@ -8,14 +8,18 @@ using Hoist.Api.Model;
 
 namespace Hoist.Api.Http
 {
-    class ResponseProcessor
+    public class ResponseProcessor
     {
         private JavaScriptSerializer Serialiser { get; set; }
 
         public ResponseProcessor()
         {
             Serialiser = new JavaScriptSerializer();
-            Serialiser.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
+            RegisterConverter(new HoistModelJavaScriptConverter());
+        }
+
+        public void RegisterConverter( JavaScriptConverter convertor ) {
+            Serialiser.RegisterConverters(new List<JavaScriptConverter>() { convertor });
         }
 
         public string ProcessResponse(ApiResponse response, bool ignore404 = false, bool ignore401 = true)

@@ -9,7 +9,9 @@
     <projectUrl>http://hoistapps.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>.Net interface to the Hoist platform</description>
-    <releaseNotes>First Release</releaseNotes>
+    <releaseNotes>Renamed Hoist to HoistClient
+    Added Buckets and Proxy
+    </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>Hoist</tags>
   </metadata>

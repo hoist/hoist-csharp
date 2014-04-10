@@ -14,7 +14,7 @@ namespace Hoist.Api
         private string _apiKey;
         private string _session;
         private IHttpLayer _httpLayer;
-        internal ResponseProcessor Processor { get; set; }
+        public ResponseProcessor Processor { get; private set; }
         
         public HoistClient(string apiKey) : this(apiKey, new HoistHttpLayer()) { } 
 
