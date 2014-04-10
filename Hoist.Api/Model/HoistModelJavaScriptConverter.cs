@@ -11,18 +11,25 @@ namespace Hoist.Api.Model
     public class HoistModelJavaScriptConverter : JavaScriptConverter
     {
 
-        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        public override object Deserialize(IDictionary<string, object> dict, Type type, JavaScriptSerializer serializer)
         {
-            if (dictionary == null)
+            if (dict == null)
                 throw new ArgumentNullException("dictionary");
 
             if (type == typeof(HoistModel))
             {
                 // Create the instance to deserialize into.
                 HoistModel retval = new HoistModel();
-                foreach (var key in dictionary.Keys)
+                foreach (var key in dict.Keys)
                 {
-                    retval.Set(key, dictionary[key].ToString());
+                    if (dict[key].GetType() == dict.GetType())
+                    {
+                        retval.Set(key, Deserialize(dict[key] as Dictionary<string, object>, type, serializer));
+                    }
+                    else
+                    {
+                        retval.Set(key, dict[key].ToString());
+                    }
                 }
                 return retval;                
             }

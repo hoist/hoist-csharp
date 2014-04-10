@@ -107,6 +107,18 @@ namespace Hoist.Api.Test
             serializedResult = serializer.Serialize(new HoistModel(new Dictionary<string, string> { { "k1", "v1" } }));
             Assert.AreEqual("{\"k1\":\"v1\"}", serializedResult);
 
+            serializedResult = serializer.Serialize(new HoistModel(new Dictionary<string, string> { { "k1", "v1" } }));
+            Assert.AreEqual("{\"k1\":\"v1\"}", serializedResult);
+
+            var hm = new HoistModel();
+            hm.Set("Name", "Jack");
+            hm.Set("Key", new HoistModel(new Dictionary<string, string> { { "Second", "Level" } }));
+            serializedResult = serializer.Serialize(hm);
+            Assert.AreEqual("{\"Name\":\"Jack\",\"Key\":{\"Second\":\"Level\"}}", serializedResult);
+            ((HoistModel)hm.Get("Key")).Set("Third", new HoistModel(new Dictionary<string, object> { { "Moose", new { x="ABS", y= new {z=234,p=123} } } }));
+            serializedResult = serializer.Serialize(hm);
+            Assert.AreEqual("{\"Name\":\"Jack\",\"Key\":{\"Second\":\"Level\",\"Third\":{\"Moose\":{\"x\":\"ABS\",\"y\":{\"z\":234,\"p\":123}}}}}", serializedResult);
+            
         }
 
         [TestMethod]
@@ -122,6 +134,11 @@ namespace Hoist.Api.Test
             Assert.AreEqual("Jack", serializedResult.Get("Name"));
             Assert.AreEqual("Value", serializedResult.Get("Key"));
 
+            serializedResult = serializer.Deserialize<HoistModel>("{\"Name\":\"Jack\",\"Key\":{ \"Second\":\"Level\" }}");
+            Assert.AreEqual(2, serializedResult.Keys.Count);
+            Assert.AreEqual("Jack", serializedResult.Get("Name"));
+            Assert.IsNotNull(serializedResult.Get("Key") as HoistModel);
+            Assert.AreEqual("Level", ((HoistModel)serializedResult.Get("Key")).Get("Second"));
         }
 
         [TestMethod]

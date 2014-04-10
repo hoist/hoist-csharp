@@ -8,15 +8,24 @@ namespace Hoist.Api.Model
 {
     public class HoistModel 
     {
-        private Dictionary<string, string> _values;
+        private Dictionary<string, object> _values;
 
         public HoistModel()
         {
-            _values = new Dictionary<string, string>();
+            _values = new Dictionary<string, object>();
         }
 
         public HoistModel(Dictionary<string, string> values) : this()
         {            
+            foreach (var item in values)
+            {
+                _values[item.Key] = item.Value;
+            }
+        }
+
+        public HoistModel(Dictionary<string, object> values)
+            : this()
+        {
             foreach (var item in values)
             {
                 _values[item.Key] = item.Value;
@@ -28,7 +37,7 @@ namespace Hoist.Api.Model
             get { return _values.Keys.ToList<string>(); }
         }
 
-        public string Get(string key)
+        public object Get(string key)
         {
             if (!_values.ContainsKey(key))
             {
@@ -40,7 +49,7 @@ namespace Hoist.Api.Model
             }
         }
 
-        internal void Set(string key, string value)
+        public void Set(string key, object value)
         {
             _values[key] = value;
         }

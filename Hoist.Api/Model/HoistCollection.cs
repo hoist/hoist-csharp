@@ -57,7 +57,7 @@ namespace Hoist.Api.Model
             {
                 var hModel = modelToUpdate as HoistModel;
                 publicProperties = hModel.Keys;
-                id = hModel.Get("_id");
+                id = hModel.Get("_id") as string;
             }
             else
             {
