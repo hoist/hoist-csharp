@@ -12,7 +12,7 @@ namespace Hoist.Api.Model
         //public string owner;
         //public string _id;
         public string key;
-        public HoistModel meta;
+        public List<HoistModel> meta;
         //public List<string> members;
 
     }

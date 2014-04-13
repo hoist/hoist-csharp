@@ -12,8 +12,10 @@ namespace Hoist.Console
     {
         static void Main(string[] args)
         {
-            Hoist.Api.Logging.LogManager.SetGetLoggerFunc(x => new ConsoleLogger(1));
-            //var client = new Hoist.Api.Hoist(args[0]);
+            var logger = new ConsoleLogger(1);
+
+            Hoist.Api.Logging.LogManager.SetGetLoggerFunc(x => logger);
+            var client = new Hoist.Api.HoistClient(args[0]);
             
 
             //try
@@ -37,10 +39,15 @@ namespace Hoist.Console
             //    System.Console.Out.WriteLine("EXCEPTION:\n{0}", ex);
             //}
 
-            StreamReader sr = new StreamReader(args[0]);
-            
+            //StreamReader sr = new StreamReader(args[0]);
 
+            var usr = client.Login(args[1], args[2]);
+            var buckets = client.ListBuckets();
+            foreach (var b in buckets) {
+                logger.Debug("{0} META: {1}", b.key, "[" + String.Join(",",b.meta.Select(x=>x.ToString()).ToArray()) + "]"); 
+            }
 
+            client.EnterBucket(args[3]);
 
 
         }

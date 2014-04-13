@@ -63,7 +63,7 @@ namespace Hoist.Api.Test
             {
                 Code = 200,
                 WithWWWAuthenticate = false,
-                Payload = "[{\"name\":\"myfirstbucket\",\"key\":\"wthpw\"},{\"name\":\"mysecondbucket\",\"key\":\"pvpmv\"},{\"meta\":{\"a\":\"b\"},\"key\":\"ping\"},{\"key\":\"pong\"}]"
+                Payload = "[{\"name\":\"myfirstbucket\",\"key\":\"wthpw\"},{\"name\":\"mysecondbucket\",\"key\":\"pvpmv\"},{\"meta\":[{\"a\":\"b\"}],\"key\":\"ping\"},{\"key\":\"pong\"}]"
             };
 
             var client = new HoistClient("MYAPI", httplayer);
@@ -73,7 +73,7 @@ namespace Hoist.Api.Test
             Assert.AreEqual(null, buckets[0].meta);   
             Assert.AreEqual("pvpmv", buckets[1].key);
             Assert.AreEqual("ping", buckets[2].key);
-            Assert.AreEqual(1, buckets[2].meta.Keys.Count);
+            Assert.AreEqual(1, buckets[2].meta[0].Keys.Count);
             Assert.AreEqual("pong", buckets[3].key);            
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
             ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/buckets", "MYAPI", null), httplayer.Calls[0]);
@@ -318,14 +318,14 @@ namespace Hoist.Api.Test
             {
                 Code = 200,
                 WithWWWAuthenticate = false,
-                Payload = "{\"key\":\"pong\", \"meta\":{\"a\":\"b\"}}"
+                Payload = "{\"key\":\"pong\", \"meta\":[{\"a\":\"b\"}]}"
             };
 
             var client = new HoistClient("MYAPI", httplayer);
             HoistBucket bucket = client.CurrentBucket();
 
             Assert.AreEqual("pong", bucket.key);
-            Assert.AreEqual("b", bucket.meta.Get("a"));            
+            Assert.AreEqual("b", bucket.meta[0].Get("a"));            
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
             ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/bucket/current", "MYAPI", null), httplayer.Calls[0]);
         
@@ -377,20 +377,20 @@ namespace Hoist.Api.Test
             {
                 Code = 200,
                 WithWWWAuthenticate = false,
-                Payload = "{\"key\":\"pong\", \"meta\":{\"a\":\"b\"}}"
+                Payload = "{\"key\":\"pong\", \"meta\":[{\"a\":\"b\"}]}"
             };
 
             var client = new HoistClient("MYAPI", httplayer);
             HoistBucket bucket = client.UpdateBucket(new HoistBucket()
             {
                 key = "pong",
-                meta = new HoistModel(new Dictionary<string, string>() { {"a","b"} } )
+                meta = new List<HoistModel>() { new HoistModel(new Dictionary<string, string>() { {"a","b"} } ) }
             });
 
             Assert.AreEqual("pong", bucket.key);
-            Assert.AreEqual("b", bucket.meta.Get("a"));
+            Assert.AreEqual("b", bucket.meta[0].Get("a"));
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
-            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "[{\"a\":\"b\"}]"), httplayer.Calls[0]);
         }
 
         [TestMethod]
@@ -411,7 +411,7 @@ namespace Hoist.Api.Test
                 HoistBucket bucket = client.UpdateBucket(new HoistBucket()
                 {
                     key = "pong",
-                    meta = new HoistModel(new Dictionary<string, string>() { { "a", "b" } })
+                    meta = new List<HoistModel>() { new HoistModel(new Dictionary<string, string>() { { "a", "b" } }) }
                 });
             }
             catch (Exceptions.NotFoundException)
@@ -422,7 +422,7 @@ namespace Hoist.Api.Test
 
             Assert.IsTrue(caughtException, "404 should return NotFoundException");            
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
-            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "[{\"a\":\"b\"}]"), httplayer.Calls[0]);
         
         }
 
@@ -444,7 +444,7 @@ namespace Hoist.Api.Test
                 HoistBucket bucket = client.UpdateBucket(new HoistBucket()
                 {
                     key = "pong",
-                    meta = new HoistModel(new Dictionary<string, string>() { { "a", "b" } })
+                    meta = new List<HoistModel>() { new HoistModel(new Dictionary<string, string>() { { "a", "b" } }) }
                 });
             }
             catch (Exceptions.UnauthorisedException)
@@ -455,7 +455,7 @@ namespace Hoist.Api.Test
 
             Assert.IsTrue(caughtException, "403 should return NotFoundException");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
-            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "[{\"a\":\"b\"}]"), httplayer.Calls[0]);
 
         }
 
@@ -477,7 +477,7 @@ namespace Hoist.Api.Test
                 HoistBucket bucket = client.UpdateBucket(new HoistBucket()
                 {
                     key = "pong",
-                    meta = new HoistModel(new Dictionary<string, string>() { { "a", "b" } })
+                    meta = new List<HoistModel>() { new HoistModel(new Dictionary<string, string>() { { "a", "b" } }) }
                 });
             }
             catch (Exceptions.UnauthorisedException)
@@ -488,7 +488,7 @@ namespace Hoist.Api.Test
 
             Assert.IsTrue(caughtException, "403 should return NotFoundException");
             Assert.IsTrue(httplayer.Calls.Count == 1, "Should call API");
-            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "{\"a\":\"b\"}"), httplayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/bucket/pong/meta", "MYAPI", null, "[{\"a\":\"b\"}]"), httplayer.Calls[0]);
 
         }
 
