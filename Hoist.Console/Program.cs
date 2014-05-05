@@ -16,6 +16,17 @@ namespace Hoist.Console
 
             Hoist.Api.Logging.LogManager.SetGetLoggerFunc(x => logger);
             var client = new Hoist.Api.HoistClient(args[0]);
+            var col = client.GetCollection(args[1]);
+
+
+            foreach (var obj in col.ToList())
+            {
+                logger.Info(obj.ToString());
+                
+            }
+
+            col.Insert(new Hoist.Api.Model.HoistModel( new Dictionary<string, string>() { { "cheese","Shop" } } ));
+
             
 
             //try
@@ -40,15 +51,24 @@ namespace Hoist.Console
             //}
 
             //StreamReader sr = new StreamReader(args[0]);
-
+            /*
             var usr = client.Login(args[1], args[2]);
+
+            //client.CreateBucket(args[3], new Api.Model.HoistModel(new Dictionary<string, string>() { {"Hello","World"} })); 
+            
+            
             var buckets = client.ListBuckets();
+
             foreach (var b in buckets) {
                 logger.Debug("{0} META: {1}", b.key, "[" + String.Join(",",b.meta.Select(x=>x.ToString()).ToArray()) + "]"); 
             }
 
             client.EnterBucket(args[3]);
 
+            var accountMappings = client.GetCollection("AccountMapping");
+
+            accountMappings.Insert( new Api.Model.HoistModel(new Dictionary<string, string>() { {"Hello","World"} })); 
+             */
 
         }
     }
