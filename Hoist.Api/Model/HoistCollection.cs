@@ -12,7 +12,7 @@ namespace Hoist.Api.Model
 {
     public class HoistCollection<CollectionType> where CollectionType : class
     {
-        private static readonly List<string> RequiredProperties = new List<String> { "_id", "_rev" };
+        private static readonly List<string> RequiredProperties = new List<String> { "_id" };
 
         public string Name { get; private set; }
         public Type ConversionType { get; private set; }

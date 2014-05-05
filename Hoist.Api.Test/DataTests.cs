@@ -413,27 +413,15 @@ namespace Hoist.Api.Test
             catch (MissingPropertiesException ex)
             {
                 caughtException = true;
-                Assert.AreEqual(2, ex.MissingProperties.Count);
-                Assert.IsTrue(ex.MissingProperties.Contains("_id"));
-                Assert.IsTrue(ex.MissingProperties.Contains("_rev"));
-            }
-
-            Assert.IsTrue(caughtException);
-            Assert.IsTrue(httpLayer.Calls.Count == 0);
-
-            try
-            {
-                collection.Update(new HoistModel(new Dictionary<string, string>() { { "Name", "Bobby" } , {"_id","123"} }));
-            }
-            catch (MissingPropertiesException ex)
-            {
-                caughtException = true;
                 Assert.AreEqual(1, ex.MissingProperties.Count);
-                Assert.IsTrue(ex.MissingProperties.Contains("_rev"));                
+                Assert.IsTrue(ex.MissingProperties.Contains("_id"));
+                
             }
 
             Assert.IsTrue(caughtException);
             Assert.IsTrue(httpLayer.Calls.Count == 0);
+
+           
 
         }
 
@@ -452,9 +440,8 @@ namespace Hoist.Api.Test
             catch (MissingPropertiesException ex)
             {
                 caughtException = true;
-                Assert.AreEqual(2, ex.MissingProperties.Count);
+                Assert.AreEqual(1, ex.MissingProperties.Count);
                 Assert.IsTrue(ex.MissingProperties.Contains("_id"));
-                Assert.IsTrue(ex.MissingProperties.Contains("_rev"));
             }
 
             Assert.IsTrue(caughtException);
