@@ -56,7 +56,7 @@ namespace Hoist.Api.Model
 
         public override string ToString()
         {
-            return "HM: " + String.Join(",", _values.Select(x=>String.Format( "('{0}',{1})", x.Key, x.Value.ToString() )).ToArray());
+            return "HM: " + String.Join(",", _values.Select(x=>String.Format( "('{0}',{1})", x.Key, (x.Value ?? "null").ToString() )).ToArray());
         }
     }
 }

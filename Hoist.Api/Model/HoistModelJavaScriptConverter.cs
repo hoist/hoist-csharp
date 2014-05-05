@@ -22,7 +22,11 @@ namespace Hoist.Api.Model
                 HoistModel retval = new HoistModel();
                 foreach (var key in dict.Keys)
                 {
-                    if (dict[key].GetType() == dict.GetType())
+                    if (dict[key] == null)
+                    {
+                        retval.Set(key, null);
+                    }
+                    else if (dict[key].GetType() == dict.GetType())
                     {
                         retval.Set(key, Deserialize(dict[key] as Dictionary<string, object>, type, serializer));
                     }

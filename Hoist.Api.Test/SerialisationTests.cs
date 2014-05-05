@@ -150,7 +150,33 @@ namespace Hoist.Api.Test
             Assert.IsNull(serializedResult);
         }
 
+        [TestMethod]
+        public void DeserializeNull()
+        {
+            var serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
+            var serializedResult = serializer.Deserialize<HoistModel>("{\"Name\":null,\"Key\":{ \"Second\":\"Level\" }}");
+            Assert.AreEqual(2, serializedResult.Keys.Count);
+            Assert.IsNull(serializedResult.Get("Name"));
+            Assert.IsNotNull(serializedResult.Get("Key") as HoistModel);
+            Assert.AreEqual("Level", ((HoistModel)serializedResult.Get("Key")).Get("Second"));
+        }
 
+        [TestMethod]
+        public void CanDeAndThenReSerialise()
+        {
+            var json = "{\"Name\":\"Jack\",\"Key\":\"Value\"}";
+
+            var serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(new List<JavaScriptConverter>() { new HoistModelJavaScriptConverter() });
+            var deserialiseResult = serializer.Deserialize<HoistModel>(json);
+            Assert.AreEqual(2, deserialiseResult.Keys.Count);
+            Assert.AreEqual("Jack", deserialiseResult.Get("Name"));
+            Assert.AreEqual("Value", deserialiseResult.Get("Key"));
+
+            var serialiseResult = serializer.Serialize(deserialiseResult);
+            Assert.AreEqual(json, serialiseResult);
+        }
        
 
     }
