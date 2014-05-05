@@ -49,3 +49,21 @@ foreach(var person in collection.FindAll())
 	Console.WriteLine(person.Name);
 }
 ```
+
+Using with PowerShell
+=====================
+
+```
+#Load dll into powershell
+Add-Type -Path .\Hoist.Api.dll
+#Create Client
+$hc = New-Object Hoist.Api.HoistClient "API KEY"
+#Create Collection
+$votes = $hc.GetCollection("Vote")
+#Show all the ids in the coolection
+$votes.ToList() | ForEach-Object {$_.Get("_id")}
+#Update all in the collection
+$votes.ToList() | ForEach-Object {
+  $_.Set("Touched", 1)
+  $votes.Update($_) }
+```
