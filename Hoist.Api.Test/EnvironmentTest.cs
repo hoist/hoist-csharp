@@ -28,13 +28,13 @@ namespace Hoist.Api.Test
             httpLayer.Response = new ApiResponse() { Code = 500, Description = "UNKNOWN" };
         }
 
-        public HoistClient CreateHoist(string apiKey, string enviroment)
+        public HoistClient CreateHoist(string apiKey, string environment)
         {
-            return new HoistClient(apiKey, httpLayer, enviroment);
+            return new HoistClient(apiKey, httpLayer, environment);
         }
 
         [TestMethod]
-        public void LoginReturnsUserWithEnviroment()
+        public void LoginReturnsUserWithEnvironment()
         {
             httpLayer.Response = new ApiResponse
             {
@@ -44,11 +44,11 @@ namespace Hoist.Api.Test
             };
             var client = CreateHoist("MYAPIKEY", "test");
             var usr = client.Login("Username", "Password");
-            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/login?overrideEnviroment=test", "MYAPIKEY", null, "{\"email\":\"Username\",\"password\":\"Password\"}", null), httpLayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://auth.hoi.io/login?overrideEnvironment=test", "MYAPIKEY", null, "{\"email\":\"Username\",\"password\":\"Password\"}", null), httpLayer.Calls[0]);
         }
 
         [TestMethod]
-        public void LoginReturnsUserWithoutEnviroment()
+        public void LoginReturnsUserWithoutEnvironment()
         {
             httpLayer.Response = new ApiResponse
             {
@@ -62,7 +62,7 @@ namespace Hoist.Api.Test
         }
 
         [TestMethod]
-        public void StatusReturnsUserWithEnviroment()
+        public void StatusReturnsUserWithEnvironment()
         {
             httpLayer.Response = new ApiResponse
             {
@@ -72,11 +72,11 @@ namespace Hoist.Api.Test
             };
             var client = CreateHoist("MYAPIKEY", "test");
             var usr = client.Status();
-            ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/status?overrideEnviroment=test", "MYAPIKEY", null, null), httpLayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.GET("https://auth.hoi.io/status?overrideEnvironment=test", "MYAPIKEY", null, null), httpLayer.Calls[0]);
         }
 
         [TestMethod]
-        public void StatusReturnsUserWithoutEnviroment()
+        public void StatusReturnsUserWithoutEnvironment()
         {
             httpLayer.Response = new ApiResponse
             {
@@ -90,7 +90,7 @@ namespace Hoist.Api.Test
         }
 
         [TestMethod]
-        public void ProxyReturnsWithoutEnviroment()
+        public void ProxyReturnsWithoutEnvironment()
         {
             httpLayer.Response = new ApiResponse
             {
@@ -116,7 +116,7 @@ namespace Hoist.Api.Test
         }
 
         [TestMethod]
-        public void ProxyReturnsWithEnviroment()
+        public void ProxyReturnsWithEnvironment()
         {
             httpLayer.Response = new ApiResponse
             {
@@ -127,16 +127,16 @@ namespace Hoist.Api.Test
             var client = CreateHoist("MYAPIKEY", "test");
             var proxy = client.GetProxy("myproxy");
             var usr = proxy.DELETE("user");
-            ConfirmCall(MockHttpLayer.HttpCall.DELETE("https://proxy.hoi.io/myproxy/user?overrideEnviroment=test", "MYAPIKEY", null, null), httpLayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.DELETE("https://proxy.hoi.io/myproxy/user?overrideEnvironment=test", "MYAPIKEY", null, null), httpLayer.Calls[0]);
 
             usr = proxy.GET("user");
-            ConfirmCall(MockHttpLayer.HttpCall.GET("https://proxy.hoi.io/myproxy/user?overrideEnviroment=test", "MYAPIKEY", null, null), httpLayer.Calls[1]);
+            ConfirmCall(MockHttpLayer.HttpCall.GET("https://proxy.hoi.io/myproxy/user?overrideEnvironment=test", "MYAPIKEY", null, null), httpLayer.Calls[1]);
 
             usr = proxy.POST("user", new { });
-            ConfirmCall(MockHttpLayer.HttpCall.POST("https://proxy.hoi.io/myproxy/user?overrideEnviroment=test", "MYAPIKEY", null, "{}"), httpLayer.Calls[2]);
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://proxy.hoi.io/myproxy/user?overrideEnvironment=test", "MYAPIKEY", null, "{}"), httpLayer.Calls[2]);
 
             usr = proxy.PUT("user", new { });
-            ConfirmCall(MockHttpLayer.HttpCall.PUT("https://proxy.hoi.io/myproxy/user?overrideEnviroment=test", "MYAPIKEY", null, "{}"), httpLayer.Calls[3]);
+            ConfirmCall(MockHttpLayer.HttpCall.PUT("https://proxy.hoi.io/myproxy/user?overrideEnvironment=test", "MYAPIKEY", null, "{}"), httpLayer.Calls[3]);
         }
     }
 }

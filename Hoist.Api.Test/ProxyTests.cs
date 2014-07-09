@@ -29,7 +29,7 @@ namespace Hoist.Api.Test
             Assert.AreEqual(expectedCall.session, actual.session, "Session Different");
             Assert.AreEqual(expectedCall.method, actual.method, "Method Different");
             Assert.AreEqual(expectedCall.oauth, actual.oauth, "OAuth Different");
-            Assert.AreEqual(expectedCall.environment, actual.environment, "Enviroment Different");
+            Assert.AreEqual(expectedCall.environment, actual.environment, "Environment Different");
         }
 
         [TestMethod]

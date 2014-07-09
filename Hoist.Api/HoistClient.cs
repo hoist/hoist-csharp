@@ -19,6 +19,8 @@ namespace Hoist.Api
         public ResponseProcessor Processor { get; private set; }
         
         public HoistClient(string apiKey) : this(apiKey, new HoistHttpLayer()) { }
+
+        public HoistClient(string apiKey, string environment) : this(apiKey, new HoistHttpLayer(), environment) { }
     
         public HoistClient(string apiKey, IHttpLayer httpLayer) : this(apiKey, httpLayer, null) { }
 

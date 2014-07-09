@@ -104,7 +104,7 @@ namespace Hoist.Api.Http
             {
                 if (!endPoint.Contains("?"))
                 {
-                    retval += "?overrideEnviroment=" + WebUtility.UrlEncode(environment);
+                    retval += "?overrideEnvironment=" + WebUtility.UrlEncode(environment);
                 }
                 else
                 {
