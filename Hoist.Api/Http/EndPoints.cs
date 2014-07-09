@@ -97,5 +97,22 @@ namespace Hoist.Api.Http
             return newUrl;
         }
 
+        public static string AddEnvironmentToUrl(string endPoint, string environment)
+        {
+            var retval = endPoint;
+            if (!String.IsNullOrWhiteSpace(environment))
+            {
+                if (!endPoint.Contains("?"))
+                {
+                    retval += "?overrideEnviroment=" + WebUtility.UrlEncode(environment);
+                }
+                else
+                {
+                    retval += "&overrideEnvironment=" + WebUtility.UrlEncode(environment);
+                }
+            }
+            return retval;
+        }
+
     }
 }

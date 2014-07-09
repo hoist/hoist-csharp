@@ -29,6 +29,7 @@ namespace Hoist.Api.Test
             Assert.AreEqual(expectedCall.session, actual.session, "Session Different");
             Assert.AreEqual(expectedCall.method, actual.method, "Method Different");
             Assert.AreEqual(expectedCall.oauth, actual.oauth, "OAuth Different");
+            Assert.AreEqual(expectedCall.environment, actual.environment, "Enviroment Different");
         }
 
         [TestMethod]
@@ -64,7 +65,7 @@ namespace Hoist.Api.Test
             Assert.AreEqual("https://api.xero.com/oauth/Authorize?oauth_token=undefined", response.redirect);
 
             Assert.IsNotNull(response);
-            ConfirmCall(MockHttpLayer.HttpCall.POST("https://proxy.hoi.io/xero/connect", "MYAPI", null, null), httpLayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://proxy.hoi.io/xero/connect", "MYAPI", null, null, null), httpLayer.Calls[0]);
         }
 
 
@@ -84,7 +85,7 @@ namespace Hoist.Api.Test
             
             Assert.IsNotNull(response);
             Assert.IsTrue(proxy.HasToken, "Should have token");
-            ConfirmCall(MockHttpLayer.HttpCall.POST("https://proxy.hoi.io/xero/connect", "MYAPI", null, null), httpLayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.POST("https://proxy.hoi.io/xero/connect", "MYAPI", null, null, null), httpLayer.Calls[0]);
         }
 
         [TestMethod]
@@ -102,7 +103,7 @@ namespace Hoist.Api.Test
             var response = proxy.Disconnect();            
             Assert.IsTrue(response, "Disconnect should return true");
             Assert.IsFalse(proxy.HasToken, "Should not have token after disconnect");
-            ConfirmCall(MockHttpLayer.HttpCall.GET("https://proxy.hoi.io/xero/disconnect", "MYAPI", null), httpLayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.GET("https://proxy.hoi.io/xero/disconnect", "MYAPI", null, null), httpLayer.Calls[0]);
         }
 
         [TestMethod]
@@ -138,7 +139,7 @@ namespace Hoist.Api.Test
             HoistModel model = proxy.DELETE("Invoices");
 
             Assert.IsNotNull(model);
-            ConfirmCall(MockHttpLayer.HttpCall.DELETE("https://proxy.hoi.io/xero/Invoices", "MYAPI", null, "iamacooltoken"), httpLayer.Calls[0]);
+            ConfirmCall(MockHttpLayer.HttpCall.DELETE("https://proxy.hoi.io/xero/Invoices", "MYAPI",  null, "iamacooltoken"), httpLayer.Calls[0]);
         }
 
         [TestMethod]

@@ -7,21 +7,26 @@ using Hoist.Api.Exceptions;
 using Hoist.Api.Http;
 using Hoist.Api.Model;
 
+
 namespace Hoist.Api
 {
     public class HoistClient
     {
         private string _apiKey;
         private string _session;
+        private string _environment;
         private IHttpLayer _httpLayer;
         public ResponseProcessor Processor { get; private set; }
         
-        public HoistClient(string apiKey) : this(apiKey, new HoistHttpLayer()) { } 
+        public HoistClient(string apiKey) : this(apiKey, new HoistHttpLayer()) { }
+    
+        public HoistClient(string apiKey, IHttpLayer httpLayer) : this(apiKey, httpLayer, null) { }
 
-        public HoistClient(string apiKey, IHttpLayer httpLayer)
+        public HoistClient(string apiKey, IHttpLayer httpLayer, string environment)
         {
             _apiKey = apiKey;
             _httpLayer = httpLayer;
+            _environment = environment;
             Processor = new ResponseProcessor();
         }
 
@@ -108,22 +113,22 @@ namespace Hoist.Api
 
         internal ApiResponse Post(string endPoint, object data, string oauthToken = null)
         {
-            return _httpLayer.Post(endPoint, _apiKey, _session, oauthToken, Processor.ToHoist(data));
+            return _httpLayer.Post(EndPoints.AddEnvironmentToUrl(endPoint, _environment), _apiKey, _session, oauthToken, Processor.ToHoist(data));
         }
 
         internal ApiResponse Put(string endPoint, object data, string oauthToken = null)
         {
-            return _httpLayer.Put(endPoint, _apiKey, _session, oauthToken, Processor.ToHoist(data));
+            return _httpLayer.Put(EndPoints.AddEnvironmentToUrl(endPoint, _environment), _apiKey, _session, oauthToken, Processor.ToHoist(data));
         }
 
         internal ApiResponse Get(string endPoint, string oauthToken=null)
         {
-            return _httpLayer.Get(endPoint, _apiKey, _session, oauthToken);            
+            return _httpLayer.Get(EndPoints.AddEnvironmentToUrl(endPoint, _environment), _apiKey, _session, oauthToken);            
         }
 
         internal ApiResponse Delete(string endPoint, string oauthToken = null)
         {
-            return _httpLayer.Delete(endPoint, _apiKey, _session, oauthToken);
+            return _httpLayer.Delete(EndPoints.AddEnvironmentToUrl(endPoint, _environment), _apiKey, _session, oauthToken);
         }
 
 

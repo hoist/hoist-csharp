@@ -67,20 +67,20 @@ namespace Hoist.Api.Http
             return wr;
         }
 
-        public ApiResponse Post(string endpoint, string apiKey, string session, string oauthToken,string data)
+        public ApiResponse Post(string endpoint, string apiKey, string session, string oauthToken, string data)
         {
             return GetResponse(CreateRequest(endpoint, "POST", apiKey, session, oauthToken, data));
         }
 
-        public ApiResponse Put(string endpoint, string apiKey, string session, string oauthToken,string data)
+        public ApiResponse Put(string endpoint, string apiKey, string session, string oauthToken, string data)
         {
             return GetResponse(CreateRequest(endpoint, "PUT", apiKey, session, oauthToken, data));
         }
 
         public ApiResponse Get(string endpoint, string apiKey, string session, string oauthToken)
         {
-            
-            return GetResponse(CreateRequest(endpoint, "GET", apiKey, session, oauthToken, null ));
+
+            return GetResponse(CreateRequest(endpoint, "GET", apiKey, session, oauthToken, null));
         }
 
         public ApiResponse Delete(string endpoint, string apiKey, string session, string oauthToken)
@@ -125,7 +125,7 @@ namespace Hoist.Api.Http
             var dataStream = response.GetResponseStream();
             var reader = new StreamReader(dataStream);
             retval.Payload = reader.ReadToEnd();
-
+            //logger.Debug("PAYLOAD: {0}", retval.Payload);
             reader.Close();
             dataStream.Close();
             response.Close();

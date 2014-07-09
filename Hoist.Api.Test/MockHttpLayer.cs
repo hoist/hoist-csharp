@@ -17,6 +17,7 @@ namespace Hoist.Api.Test
             public string data = null;
             public string method = null;
             public string oauth = null;
+            public string environment = null;
 
             public static HttpCall GET(string endpoint, string apiKey, string session)
             {
@@ -25,7 +26,7 @@ namespace Hoist.Api.Test
 
             public static HttpCall GET(string endpoint, string apiKey, string session, string oauth)
             {
-                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "GET", oauth=oauth };
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "GET", oauth = oauth };
             }
 
             public static HttpCall POST(string endpoint, string apiKey, string session, string data)
@@ -40,22 +41,22 @@ namespace Hoist.Api.Test
 
             public static HttpCall PUT(string endpoint, string apiKey, string session, string data)
             {
-                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "PUT", data = data };
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "PUT", data = data};
             }
 
             public static HttpCall PUT(string endpoint, string apiKey, string session, string data, string oauth)
             {
-                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "PUT", data = data, oauth=oauth };
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "PUT", data = data, oauth = oauth };
             }
 
             public static HttpCall DELETE(string endpoint, string apiKey, string session)
             {
-                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "DELETE" };
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "DELETE"};
             }
 
             public static HttpCall DELETE(string endpoint, string apiKey, string session, string oauth)
             {
-                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "DELETE", oauth=oauth };
+                return new HttpCall() { endpoint = endpoint, apiKey = apiKey, session = session, method = "DELETE", oauth = oauth };
             }
         }
 
@@ -98,7 +99,7 @@ namespace Hoist.Api.Test
 
         public ApiResponse Delete(string endpoint, string apiKey, string session, string oauth)
         {
-            Calls.Add(HttpCall.DELETE(endpoint, apiKey, session,oauth));
+            Calls.Add(HttpCall.DELETE(endpoint, apiKey, session, oauth));
             if (ErrorToThrow != null)
             {
                 throw ErrorToThrow;
